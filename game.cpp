@@ -104,68 +104,68 @@ void Game::Setup(void)
 
     // Setup the player object (position, texture, vertex count)
     // Note that, in this specific implementation, the player object should always be the first object in the game object vector 
-    game_objects_.push_back(new PlayerGameObject(glm::vec3(0.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[5]));
+    game_objects_.push_back(new PlayerGameObject(glm::vec3(0.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[0]));
     float pi_over_two = glm::pi<float>() / 2.0f;
     game_objects_[0]->SetRotation(pi_over_two);
     game_objects_[0]->SetScaleX(1.9f);
 
     // Setup other objects
-    game_objects_.push_back(new EnemyGameObject(glm::vec3(-1.0f, 1.0f, 0.0f), sprite_, &sprite_shader_, tex_[6]));
+    game_objects_.push_back(new EnemyGameObject(glm::vec3(-1.0f, 1.0f, 0.0f), sprite_, &sprite_shader_, tex_[1]));
     game_objects_[1]->SetRotation(pi_over_two);
     game_objects_[1]->SetScaleX(1.9f/1.5f);
     game_objects_[1]->SetScaleY(1.0f/1.5f);
 
-    game_objects_.push_back(new EnemyGameObject(glm::vec3(1.0f, -0.5f, 0.0f), sprite_, &sprite_shader_, tex_[6]));
+    game_objects_.push_back(new EnemyGameObject(glm::vec3(1.0f, -0.5f, 0.0f), sprite_, &sprite_shader_, tex_[1]));
     game_objects_[2]->SetRotation(pi_over_two);
     game_objects_[2]->SetScaleX(1.9f / 1.5f);
     game_objects_[2]->SetScaleY(1.0f / 1.5f);
 
-    game_objects_.push_back(new EnemyGameObject(glm::vec3(-0.5f, -2.5f, 0.0f), sprite_, &sprite_shader_, tex_[6]));
+    game_objects_.push_back(new EnemyGameObject(glm::vec3(-0.5f, -2.5f, 0.0f), sprite_, &sprite_shader_, tex_[1]));
     game_objects_[3]->SetRotation(pi_over_two);
     game_objects_[3]->SetScaleX(1.9f / 1.5f);
     game_objects_[3]->SetScaleY(1.0f / 1.5f);
 
-    game_objects_.push_back(new EnemyGameObject(glm::vec3(-1.5f, -1.0f, 0.0f), sprite_, &sprite_shader_, tex_[6]));
+    game_objects_.push_back(new EnemyGameObject(glm::vec3(-1.5f, -1.0f, 0.0f), sprite_, &sprite_shader_, tex_[1]));
     game_objects_[4]->SetRotation(pi_over_two);
     game_objects_[4]->SetScaleX(1.9f / 1.5f);
     game_objects_[4]->SetScaleY(1.0f / 1.5f);
 
-    game_objects_.push_back(new EnemyGameObject(glm::vec3(1.0f, 1.0f, 0.0f), sprite_, &sprite_shader_, tex_[6]));
+    game_objects_.push_back(new EnemyGameObject(glm::vec3(1.0f, 1.0f, 0.0f), sprite_, &sprite_shader_, tex_[1]));
     game_objects_[5]->SetRotation(pi_over_two);
     game_objects_[5]->SetScaleX(1.9f / 1.5f);
     game_objects_[5]->SetScaleY(1.0f / 1.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[6]->SetRotation(pi_over_two);
     game_objects_[6]->SetScaleX(0.5f);
     game_objects_[6]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[7]->SetRotation(pi_over_two);
     game_objects_[7]->SetScaleX(0.5f);
     game_objects_[7]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[8]->SetRotation(pi_over_two);
     game_objects_[8]->SetScaleX(0.5f);
     game_objects_[8]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[9]->SetRotation(pi_over_two);
     game_objects_[9]->SetScaleX(0.5f);
     game_objects_[9]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[10]->SetRotation(pi_over_two);
     game_objects_[10]->SetScaleX(0.5f);
     game_objects_[10]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[11]->SetRotation(pi_over_two);
     game_objects_[11]->SetScaleX(0.5f);
     game_objects_[11]->SetScaleY(0.5f);
 
-    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[8]));
+    game_objects_.push_back(new CollectibleGameObject(glm::vec3(1.5f, 1.5f, 0.0f), sprite_, &sprite_shader_, tex_[2]));
     game_objects_[12]->SetRotation(pi_over_two);
     game_objects_[12]->SetScaleX(0.5f);
     game_objects_[12]->SetScaleY(0.5f);
@@ -216,16 +216,12 @@ void Game::SetAllTextures(void)
 {
     // Load all textures that we will need
     // Declare all the textures here
-    const char *texture[] = {
-        "/textures/destroyer_red.png", 
-        "/textures/destroyer_green.png", 
-        "/textures/destroyer_blue.png", 
-        "/textures/stars2.png", 
-        "/textures/orb.png",
-        "/textures/blueship2.png",
-        "/textures/blueship3.png",
-        "/textures/explosion.png",
-        "/textures/coin.png"};
+    const char* texture[] = {
+        "/textures/player_ship.png",
+        "/textures/ship.png",
+        "/textures/coin.png",
+        "/textures/water.png" };
+        
     // Get number of declared textures
     int num_textures = sizeof(texture) / sizeof(char *);
     // Allocate a buffer for all texture references
