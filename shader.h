@@ -25,7 +25,7 @@ namespace game {
             void SetUniform1i(const GLchar *name, int value);
 
             // Sets a uniform float variable in your shader program to a value
-            void SetUniform1f(const GLchar *name, float value);
+            void SetUniform1f(const GLchar* name, float value);
 
             // Sets a uniform vector2 variable in your shader program to a vector
             void SetUniform2f(const GLchar *name, const glm::vec2 &vector);

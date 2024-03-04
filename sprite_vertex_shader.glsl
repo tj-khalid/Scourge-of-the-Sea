@@ -20,6 +20,7 @@ void main()
     vec4 vertex_pos = vec4(vertex, 0.0, 1.0);
     gl_Position = view_matrix * transformation_matrix * vertex_pos;
     
+
     // Pass attributes to fragment shader
     color_interp = vec4(color, 1.0);
     uv_interp = uv;

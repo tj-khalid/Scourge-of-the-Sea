@@ -29,6 +29,10 @@ namespace game {
             // Run the game (keep the game active)
             void MainLoop(void); 
 
+            GameObject* SpawnObject(GameObject::ObjectType type, const glm::vec3& position, GLuint texture, float scale);
+            GameObject* SpawnObject(GameObject::ObjectType type, const glm::vec3& position, GLuint texture, float scale, int index);
+
+            bool RayCollision(GameObject* rayObj, GameObject* circObj);
         private:
             // Main window: pointer to the GLFW window structure
             GLFWwindow *window_;
@@ -55,6 +59,14 @@ namespace game {
             // Keep track of time
             double current_time_;
 
+            Timer* spawnCollectibleTimer_;
+            Timer* spawnEnemyTimer_;
+            Timer* closeTimer_;
+
+            glm::vec3 collectible_spawn_points[4];
+            glm::vec3 enemy_spawn_points[4];
+            int cSpawnCounter;
+            int eSpawnCounter;
             // Callback for when the window is resized
             static void ResizeCallback(GLFWwindow* window, int width, int height);
 

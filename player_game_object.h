@@ -11,16 +11,33 @@ namespace game {
         public:
             PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture);
 
+            ~PlayerGameObject();
             // Update function for moving the player object around
             void Update(double delta_time) override;
 
+            void CollideWith(GameObject*) override;
+
             void AddCollectible();
 
-            bool isInvicible() { return !invicibiltyTimer_->Finished(); }
+            bool isInvicible() { return invicibiltyTimer_->Running(); }
 
-    protected:
-        int collectibleCount_;
-        Timer* invicibiltyTimer_;
+            void SetInvincibleTex(GLuint text) { invincibleTexture_ = text; }
+
+            void SetTexture(GLuint texture) { texture_ = texture; }
+
+            glm::vec3 GetVelocity(void) { return velocity_; }
+
+            void AddForce(glm::vec3&);
+
+            bool Shoot(void);
+        protected:
+            int collectibleCount_;
+            Timer* invicibiltyTimer_;
+            Timer* attackCooldown_;
+            glm::vec3 velocity_;
+
+            GLuint invincibleTexture_;
+            GLuint normTexture_;
     }; // class PlayerGameObject
 
 } // namespace game

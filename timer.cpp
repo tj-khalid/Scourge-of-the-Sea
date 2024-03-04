@@ -9,7 +9,7 @@ Timer::Timer(void)
 {
     start_time_ = 0;
     end_time_ = -1;
-    started_ = false;
+    running_ = false;
 }
 
 
@@ -22,14 +22,18 @@ void Timer::Start(float end_time)
 {
     start_time_ = glfwGetTime();
     end_time_ = end_time;
-    started_ = true;
+    running_ = true;
 }
 
+bool Timer::Running(void) const {
+    return running_;
+}
 
-bool Timer::Finished(void) const
+bool Timer::Finished(void)
 {
-    if (started_) {
+    if (running_) {
         if (glfwGetTime()-start_time_ > end_time_) {
+            running_ = false;
             return true;
         }
     }

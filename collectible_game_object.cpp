@@ -12,7 +12,6 @@ namespace game {
 		hp_ = 1;
 		type_ = Collectible;
 		collision_ = true;
-		collisionRadius_ = .3f;
 	}
 
 	// Update function for moving the player object around
@@ -24,4 +23,13 @@ namespace game {
 		GameObject::Update(delta_time);
 	}
 
+	void CollectibleGameObject::CollideWith(GameObject* obj) {
+		switch (obj->GetObjectType()){
+			case Player:
+				SetGhostMode(true);
+				break;
+			default:
+				break;
+		}
+	}
 } // namespace game

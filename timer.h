@@ -15,12 +15,12 @@ namespace game {
             void Start(float end_time); 
 
             // Check if timer has finished
-            bool Finished(void) const;
-
+            bool Finished(void);
+            bool Running(void) const;
         private:
             double start_time_;
             float end_time_;
-            bool started_;
+            bool running_;
 
     }; // class Timer
 

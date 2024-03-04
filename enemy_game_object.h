@@ -11,12 +11,27 @@ namespace game {
         enum State { Patrolling, Intercepting };
         State state;
         glm::vec3 patrollingPosition_;
+        glm::vec3 targetDir_;
+        GameObject* target_;
+        Timer* chaseTimer;
+        float detectionRadius_;
+        float t;
+
 
     public:
         EnemyGameObject(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture);
 
+        ~EnemyGameObject();
         // Update function for moving the player object around
         void Update(double delta_time) override;
+
+        void CollideWith(GameObject*) override;
+
+        float getDetectionRadius() { return detectionRadius_; };
+
+        void chaseTarget(GameObject* target);
+
+        State getState(void) const { return state; }
     }; // class EnemyGameObject
 
 } // namespace game
