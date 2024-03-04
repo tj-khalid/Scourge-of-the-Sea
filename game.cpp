@@ -196,15 +196,15 @@ void Game::SetAllTextures(void)
         "/textures/destroyer_red.png", 
         "/textures/destroyer_green.png", 
         "/textures/destroyer_blue.png", 
-        "/textures/stars.png", 
+        "/textures/water.png", 
         "/textures/orb.png",
-        "/textures/blueship2.png",
-        "/textures/blueship3.png",
+        "/textures/player_ship.png",
+        "/textures/ship.png",
         "/textures/explosion.png",
         "/textures/coin.png",
         "/textures/blueship2invinc.png",
         "/textures/axe.png",
-        "/textures/bullet.png"};
+        "/textures/cannon ball.png"};
     // Get number of declared textures
     int num_textures = sizeof(texture) / sizeof(char *);
     // Allocate a buffer for all texture references
