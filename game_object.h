@@ -17,7 +17,7 @@ namespace game {
     */
     class GameObject {
     public:
-        enum ObjectType {Player, Enemy, Collectible, SwingingAxe, Other, Bullet};
+        enum ObjectType {Player, Enemy, Collectible, SwingingAxe, Other, Bullet, Shark, EnemyShip};
 
     public:
         // Constructor
@@ -57,8 +57,8 @@ namespace game {
         // Setters
         inline void SetPosition(const glm::vec3& position) { position_ = position; }
         inline void SetScale(float scaleFactor) { scale_.x *= scaleFactor; scale_.y *= scaleFactor; collisionRadius_ *= scaleFactor; }
-        inline void SetScaleX(float scale) { scale_.x = scale; collisionRadius_ = (scale_.x + scale_.y) / 4;}
-        inline void SetScaleY(float scale) { scale_.y = scale; collisionRadius_ = (scale_.x + scale_.y) / 4;}
+        inline void SetScaleX(float scale) { scale_.x = scale; collisionRadius_ = (scale_.x + scale_.y) / 7;}
+        inline void SetScaleY(float scale) { scale_.y = scale; collisionRadius_ = (scale_.x + scale_.y) / 7;}
         void SetRotation(float angle);
 
         void SetGhostMode(bool mode);
@@ -69,6 +69,8 @@ namespace game {
         void SetTiling(float scale) { tiling_ = scale; }
         // Reduces hp by damage
         void TakeDamage(int damage);
+        //Add Force To Velocity
+        void AddForce(glm::vec3&);
 
         protected:
             // Object's Transform Variables
@@ -76,12 +78,15 @@ namespace game {
             glm::vec3 orbitPointOffset;
             glm::vec3 scale_;
             float angle_;
+            glm::vec3 velocity_;
 
             float orbitAngle_;
 
             bool ghost_mode_;
             bool isOrbiting_;
             bool setToDestroy_;
+
+            float maxspeed;
 
             float tiling_;
             // Objects Health

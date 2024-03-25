@@ -14,6 +14,11 @@
 #include "collectible_game_object.h"
 #include "bullet.h"
 #include "game.h"
+#include "shark.h"
+#include "EnemyShip.h"
+
+
+using namespace std; 
 
 namespace game {
 
@@ -124,14 +129,20 @@ void Game::Setup(void)
 
     // Setup the player object (position, texture, vertex count)
     // Note that, in this specific implementation, the player object should always be the first object in the game object vector 
-    SpawnObject(GameObject::Player, glm::vec3(0.0f, 0.f, 0.0f), tex_[5], 1/1.5f);
+    SpawnObject(GameObject::Player, glm::vec3(0.0f, 0.f, 0.0f), tex_[5], 3/1.5f);
     PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
     player->SetInvincibleTex(tex_[9]);
 
     // Setup other objects
 
-    SpawnObject(GameObject::Enemy, glm::vec3(2.0f, -2.5f, 0.0f), tex_[6], 1.f/2.f);
-    SpawnObject(GameObject::Enemy, glm::vec3(-2.5f, -1.5f, 0.0f), tex_[6], 1.f / 2.f);
+
+    
+    Shark* SharkTest =  (Shark*)SpawnObject(GameObject::Shark, glm::vec3(2.0f, -2.5f, 0.0f), tex_[12], 1.f/2.f);
+    cout << SharkTest->GetScaleX() << " " << SharkTest->GetScaleY();
+
+    SpawnObject(GameObject::EnemyShip, glm::vec3(-2.5f, -1.5f, 0.0f), tex_[6], 1.f / 2.f);
+    /*
+    
     SpawnObject(GameObject::Enemy, glm::vec3(-2.5f, -2.0f, 0.0f), tex_[6], 1.f / 2.f);
     SpawnObject(GameObject::Enemy, glm::vec3(2.0f, 2.0f, 0.0f), tex_[6], 1.f / 2.f);
 
@@ -140,18 +151,17 @@ void Game::Setup(void)
     SpawnObject(GameObject::Collectible, glm::vec3(-1.5f, -2.5f, 0.0f), tex_[8], 1.f / 3.f);
     SpawnObject(GameObject::Collectible, glm::vec3(2.5f, 1.5f, 0.0f), tex_[8], 1.f / 3.f);
     SpawnObject(GameObject::Collectible, glm::vec3(2.5f, -1.5f, 0.0f), tex_[8], 1.f / 3.f);
-
-    SpawnObject(GameObject::SwingingAxe, glm::vec3(2.f, -2.f, 0.0f), tex_[10], 1.f);
-    game_objects_[10]->SetOrbitMode(true);
+    
 
     spawnCollectibleTimer_->Start(3);
     spawnEnemyTimer_->Start(7);
+    */
     // Setup background
     // In this specific implementation, the background is always the
     // last object
     GameObject *background = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[3]);
     background->SetScale(60.0f);
-    background->SetTiling(3.f);
+    background->SetTiling(3.0f);
     game_objects_.push_back(background);
 }
 
@@ -202,9 +212,13 @@ void Game::SetAllTextures(void)
         "/textures/ship.png",
         "/textures/explosion.png",
         "/textures/coin.png",
-        "/textures/blueship2invinc.png",
+        "/textures/barrel.png",
         "/textures/axe.png",
-        "/textures/cannon ball.png"};
+        "/textures/cannon ball.png",
+        "/textures/hai-fin-shadow.png"
+
+    
+    };
     // Get number of declared textures
     int num_textures = sizeof(texture) / sizeof(char *);
     // Allocate a buffer for all texture references
@@ -292,8 +306,10 @@ void Game::HandleControls(double delta_time)
     }
     if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (player->Shoot()) {
-            GameObject* bullet = SpawnObject(GameObject::Bullet, player->GetPosition() + (player->GetBearing() * 0.5f), tex_[11], .75f, game_objects_.size()-2);
-            bullet->SetRotation(player->GetAngle());
+            GameObject* bulletRight = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .40f, game_objects_.size() - 2);
+            bulletRight->SetRotation(player->GetAngle() - glm::pi<float>()/2);
+            GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .40f, game_objects_.size() - 2);
+            bulletLeft->SetRotation(player->GetAngle() + glm::pi<float>() / 2);
         }
     }
 
@@ -367,7 +383,7 @@ void Game::Update(double delta_time){
             }
             
 
-            if (other_game_object->GetObjectType() == GameObject::Enemy && current_game_object->GetObjectType() == GameObject::Player) {
+            if (other_game_object->GetObjectType() == GameObject::EnemyShip && current_game_object->GetObjectType() == GameObject::Player) {
                 EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
                 if (distance <= enemy->getDetectionRadius() && enemy->getState() == 0) {
                     enemy->chaseTarget(current_game_object);
@@ -439,9 +455,14 @@ GameObject* Game::SpawnObject(GameObject::ObjectType type, const glm::vec3& posi
     case GameObject::Bullet:
         newObject = new Bullet(position, sprite_, &sprite_shader_, texture);
         break;
-    case GameObject::SwingingAxe:
     case GameObject::Other:
         newObject = new GameObject(position, sprite_, &sprite_shader_, texture);
+        break;
+    case GameObject::Shark:
+        newObject = new Shark(position, sprite_, &sprite_shader_, texture);
+        break;
+    case GameObject::EnemyShip:
+        newObject = new EnemyShip(position, sprite_, &sprite_shader_, texture);
         break;
     }
 

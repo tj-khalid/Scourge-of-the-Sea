@@ -5,6 +5,8 @@
 
 namespace game {
 
+    using namespace std;
+
 GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture) 
 {
 
@@ -22,6 +24,8 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
     setToDestroy_ = false;
     ghost_mode_ = false;
     hp_ = 1;
+    velocity_ = glm::vec3(0.0f, 0.0f, 0.0f);
+    
 
     int width, height;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -34,7 +38,7 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
     orbitPointOffset = position_ + glm::vec3(-scale_.x / 2.f, scale_.y / 2.f, 0.0f);
 
     deathTimer_ = new Timer();
-    collisionRadius_ = (scale_.x + scale_.y)/4;
+    collisionRadius_ = (scale_.x + scale_.y)/7;
 }
 
 GameObject::~GameObject() {
@@ -67,6 +71,7 @@ void GameObject::SetRotation(float angle){
 }
 
 void GameObject::Update(double delta_time) {
+    SetPosition(GetPosition() + velocity_ * (float)delta_time);
     if (deathTimer_->Finished() || hp_ <= 0) {
         setToDestroy_ = true;
     }
@@ -144,5 +149,11 @@ void GameObject::SetGhostMode(bool mode) {
     ghost_mode_ = mode;
 }
 
+void GameObject::AddForce(glm::vec3& force) {
+    velocity_ += force;
+    if (glm::length(velocity_) > maxspeed) {
+        velocity_ = glm::normalize(velocity_) * 2.0f;
+    }
+}
 
 } // namespace game

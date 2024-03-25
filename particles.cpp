@@ -130,6 +130,13 @@ void Particles::SetGeometry(GLuint shader_program){
     GLint tex_att = glGetAttribLocation(shader_program, "uv");
     glVertexAttribPointer(tex_att, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void *)(5 * sizeof(GLfloat)));
     glEnableVertexAttribArray(tex_att);
+
+    GLint colorMatrixLocation = glGetUniformLocation(shader_program, "color_matrix");
+
+    // Set the value of the color_matrix uniform
+    // Assuming you have a 4x4 matrix representing your color matrix stored in a glm::mat4 variable named 'colorMatrix'
+    glm::mat4 colorMatrix = glm::mat4(1.0f); // Initialize with identity matrix as an example
+    glUniformMatrix4fv(colorMatrixLocation, 1, GL_FALSE, glm::value_ptr(colorMatrix));
 }
 
 } // namespace game

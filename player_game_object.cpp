@@ -15,8 +15,8 @@ PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Sh
 	collectibleCount_ = 0;
 	invicibiltyTimer_ = new Timer();
 	attackCooldown_ = new Timer();
-	velocity_ = glm::vec3(0.0f, 0.0f, 0.0f);
 	normTexture_ = texture;
+	maxspeed = 2; 
 }
 
 PlayerGameObject::~PlayerGameObject() {
@@ -40,7 +40,7 @@ void PlayerGameObject::Update(double delta_time) {
 		texture_ = normTexture_;
 	}
 
-	SetPosition(GetPosition() + velocity_ * (float)delta_time);
+	
 
 	// Call the parent's update method to move the object in standard way, if desired
 	GameObject::Update(delta_time);
@@ -48,13 +48,6 @@ void PlayerGameObject::Update(double delta_time) {
 
 void PlayerGameObject::AddCollectible() {
 	collectibleCount_++;
-}
-
-void PlayerGameObject::AddForce(glm::vec3& force) {
-	velocity_ += force;
-	if (glm::length(velocity_) > 2) {
-		velocity_ = glm::normalize(velocity_) * 2.0f;
-	}
 }
 
 void PlayerGameObject::CollideWith(GameObject* obj) {
@@ -76,7 +69,7 @@ bool PlayerGameObject::Shoot() {
 	attackCooldown_->Finished();
 	if (!attackCooldown_->Running())
 	{
-		attackCooldown_->Start(.3f);
+		attackCooldown_->Start(.6f);
 		return true;
 	}
 	return false;

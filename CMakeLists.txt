@@ -19,6 +19,8 @@ set(HDRS
     bullet.h
     particle_system.h
     particles.h
+    shark.h
+    enemyShip.h
 )
  
 set(SRCS
@@ -35,6 +37,8 @@ set(SRCS
     bullet.cpp
     particle_system.cpp
     particles.cpp
+    shark.cpp
+    enemyShip.cpp
     particle_vertex_shader.glsl
     particle_fragment_shader.glsl
     sprite_vertex_shader.glsl

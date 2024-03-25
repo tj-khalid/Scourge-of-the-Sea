@@ -27,14 +27,14 @@ namespace game {
 
             glm::vec3 GetVelocity(void) { return velocity_; }
 
-            void AddForce(glm::vec3&);
+            
 
             bool Shoot(void);
         protected:
             int collectibleCount_;
             Timer* invicibiltyTimer_;
             Timer* attackCooldown_;
-            glm::vec3 velocity_;
+            
 
             GLuint invincibleTexture_;
             GLuint normTexture_;

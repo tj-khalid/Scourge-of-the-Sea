@@ -12,7 +12,6 @@ namespace game {
 
 		void CollideWith(GameObject*) override;
 	protected:
-		Timer* lifespan_;
 		float speed_;
 	};
 }
