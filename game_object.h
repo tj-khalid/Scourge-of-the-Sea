@@ -71,6 +71,7 @@ namespace game {
         void TakeDamage(int damage);
         //Add Force To Velocity
         void AddForce(glm::vec3&);
+        bool RayCollision(glm::vec3 rayObj, GameObject* circObj);
 
         protected:
             // Object's Transform Variables

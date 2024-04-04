@@ -1,5 +1,7 @@
 #include "collectible_game_object.h"
 
+//Texture 8,9 
+
 namespace game {
 
 	/*
@@ -12,6 +14,7 @@ namespace game {
 		hp_ = 1;
 		type_ = Collectible;
 		collision_ = true;
+		collectType = Coin; 
 	}
 
 	// Update function for moving the player object around
@@ -26,10 +29,15 @@ namespace game {
 	void CollectibleGameObject::CollideWith(GameObject* obj) {
 		switch (obj->GetObjectType()){
 			case Player:
-				SetGhostMode(true);
+				setToDestroy_ = true; 
 				break;
 			default:
 				break;
 		}
 	}
+
+	enum CollectibleGameObject::collectType CollectibleGameObject::getCollectType() {
+		return collectType;
+	}
+
 } // namespace game

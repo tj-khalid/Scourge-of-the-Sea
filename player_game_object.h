@@ -31,7 +31,9 @@ namespace game {
 
             bool Shoot(void);
         protected:
-            int collectibleCount_;
+            int coinCount_;
+            int boozeCount_;
+            int chestCount_;
             Timer* invicibiltyTimer_;
             Timer* attackCooldown_;
             

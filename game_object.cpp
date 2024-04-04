@@ -156,4 +156,28 @@ void GameObject::AddForce(glm::vec3& force) {
     }
 }
 
+bool GameObject::RayCollision(glm::vec3 rayObj, GameObject* circObj) {
+    glm::vec3 dir = rayObj;
+    glm::vec3 P = position_;
+    glm::vec3 C = circObj->GetPosition();
+    float a = glm::dot(dir, dir);
+    float b = glm::dot((2.f * dir), P - C);
+    float c = glm::dot(P - C, P - C) - std::pow(circObj->GetCollisionRadius(), 2);
+    float disc = std::pow(b, 2) - 4 * a * c;
+    float t1 = NULL, t2 = NULL;
+    if (disc < 0) {
+        return false; 
+    }
+    
+    t1 = (-b + std::sqrt(disc)) / (2 * a);
+    t2 = (-b - std::sqrt(disc)) / (2 * a);
+
+    float closert = (t1 <= t2) ? t1 : t2;
+    if (closert < 2.0f) {
+        return true;
+    }
+
+    return false;
+}
+
 } // namespace game

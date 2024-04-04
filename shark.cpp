@@ -13,7 +13,7 @@ namespace game {
 	Shark::Shark(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
 		: EnemyGameObject(position, geom, shader, texture) {
 		ReactionTime = 1.0f;
-		type_ = GameObject::EnemyShip;
+		type_ = GameObject::Enemy;
 	}
 
 	Shark::~Shark() {

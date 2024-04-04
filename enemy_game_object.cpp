@@ -14,7 +14,7 @@ namespace game {
 		: GameObject(position, geom, shader, texture) {
 		hp_ = 1;
 		collision_ = true;
-		detectionRadius_ = 12.f;
+		detectionRadius_ = 5.f;
 		state = Patrolling;
 		type_ = Enemy;
 		patrollingPosition_ = position_;
@@ -43,7 +43,6 @@ namespace game {
 		patrollingPosition_ = position_;
 		chaseTimer->Start(ReactionTime);
 		t = 0;
-		std::cout << "Chasing";
 	}
 
 	void EnemyGameObject::CollideWith(GameObject* obj) {

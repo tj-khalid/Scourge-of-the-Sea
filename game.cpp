@@ -85,11 +85,6 @@ void Game::Init(void)
     enemy_spawn_points[2] = glm::vec3(2.f, -2.f, 0.f);
     enemy_spawn_points[3] = glm::vec3(-2.f, -2.f, 0.f);
 
-    collectible_spawn_points[0] = glm::vec3(0.f, 2.f, 0.f);
-    collectible_spawn_points[1] = glm::vec3(2.f, 0.f, 0.f);
-    collectible_spawn_points[2] = glm::vec3(0.f, -2.f, 0.f);
-    collectible_spawn_points[3] = glm::vec3(-2.f, 0.f, 0.f);
-
     cSpawnCounter = 0;
     eSpawnCounter = 0;
     // Initialize sprite shader
@@ -136,11 +131,10 @@ void Game::Setup(void)
     // Setup other objects
 
 
-    
-    Shark* SharkTest =  (Shark*)SpawnObject(GameObject::Shark, glm::vec3(2.0f, -2.5f, 0.0f), tex_[12], 1.f/2.f);
-    cout << SharkTest->GetScaleX() << " " << SharkTest->GetScaleY();
+   Shark* SharkTest =  (Shark*)SpawnObject(GameObject::Shark, glm::vec3(4.0f, -4.5f, 0.0f), tex_[12], 1.f/2.f);
+   cout << SharkTest->getState() << std::endl;
 
-    SpawnObject(GameObject::EnemyShip, glm::vec3(-2.5f, -1.5f, 0.0f), tex_[6], 1.f / 2.f);
+    //SpawnObject(GameObject::EnemyShip, glm::vec3(-2.5f, -1.5f, 0.0f), tex_[6], 1.f / 2.f);
     /*
     
     SpawnObject(GameObject::Enemy, glm::vec3(-2.5f, -2.0f, 0.0f), tex_[6], 1.f / 2.f);
@@ -152,10 +146,10 @@ void Game::Setup(void)
     SpawnObject(GameObject::Collectible, glm::vec3(2.5f, 1.5f, 0.0f), tex_[8], 1.f / 3.f);
     SpawnObject(GameObject::Collectible, glm::vec3(2.5f, -1.5f, 0.0f), tex_[8], 1.f / 3.f);
     
-
+    */
     spawnCollectibleTimer_->Start(3);
     spawnEnemyTimer_->Start(7);
-    */
+    
     // Setup background
     // In this specific implementation, the background is always the
     // last object
@@ -215,7 +209,8 @@ void Game::SetAllTextures(void)
         "/textures/barrel.png",
         "/textures/axe.png",
         "/textures/cannon ball.png",
-        "/textures/hai-fin-shadow.png"
+        "/textures/hai-fin-shadow.png",
+        "/textures/chest.png"
 
     
     };
@@ -383,7 +378,7 @@ void Game::Update(double delta_time){
             }
             
 
-            if (other_game_object->GetObjectType() == GameObject::EnemyShip && current_game_object->GetObjectType() == GameObject::Player) {
+            if (other_game_object->GetObjectType() == GameObject::Enemy && current_game_object->GetObjectType() == GameObject::Player) {
                 EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
                 if (distance <= enemy->getDetectionRadius() && enemy->getState() == 0) {
                     enemy->chaseTarget(current_game_object);
@@ -393,13 +388,41 @@ void Game::Update(double delta_time){
     }
 
     if (spawnCollectibleTimer_->Finished()){
-        SpawnObject(GameObject::Collectible, collectible_spawn_points[(cSpawnCounter++)%collectible_spawn_points->length()], tex_[8], 1.f / 3.f, game_objects_.size() - 2);
-        spawnCollectibleTimer_->Start(3);
+        int random_angle = std::rand() % 360 + 1;
+        int random_collectable = std::rand() % 3;
+        glm::vec3 randomCollectableSpawn = (game_objects_[0]->GetPosition() + glm::vec3(std::cos(random_angle), std::sin(random_angle), 0) * 3.0f) ;
+        
+        if (random_collectable == 0) {
+            CollectibleGameObject* newCollectible = (CollectibleGameObject*)SpawnObject(GameObject::Collectible, randomCollectableSpawn, tex_[8], 2.f / 3.f, game_objects_.size() - 1);
+            newCollectible->setCollectType(CollectibleGameObject::Coin);
+        }
+        else if (random_collectable == 1) {
+            CollectibleGameObject* newCollectible = (CollectibleGameObject*)SpawnObject(GameObject::Collectible, randomCollectableSpawn, tex_[9], 2.f / 3.f, game_objects_.size() - 1);
+            newCollectible->setCollectType(CollectibleGameObject::Booze);
+        }
+        else if (random_collectable == 2) {
+            CollectibleGameObject* newCollectible = (CollectibleGameObject*)SpawnObject(GameObject::Collectible, randomCollectableSpawn, tex_[13], 2.f / 3.f, game_objects_.size() - 1);
+            newCollectible->setCollectType(CollectibleGameObject::Chest);
+        }
+
+        
+        spawnCollectibleTimer_->Start(6);
     }
 
     if (spawnEnemyTimer_->Finished()) {
-        SpawnObject(GameObject::Enemy, enemy_spawn_points[(eSpawnCounter++)%enemy_spawn_points->length()], tex_[6], 1.f / 2.f, game_objects_.size() - 2);
-        spawnEnemyTimer_->Start(5);
+        int random_angle = std::rand() % 360 + 1;
+        int random_enemy = std::rand() % 2;
+        glm::vec3 randomEnemySpawn = (game_objects_[0]->GetPosition() + glm::vec3(std::cos(random_angle), std::sin(random_angle), 0) * 5.0f);
+
+        if (random_enemy == 0) {
+            SpawnObject(GameObject::Shark, randomEnemySpawn, tex_[12], 1.f / 2.f, game_objects_.size() - 1);
+        }
+        else if (random_enemy == 1) {
+            SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
+        }
+        
+        
+        spawnEnemyTimer_->Start(10);
     }
 
 }
