@@ -31,7 +31,10 @@ namespace game {
 	// Update function for moving the player object around
 	void EnemyGameObject::Update(double delta_time) {
 		// Special enemy updates go here
-		
+
+		if (chaseTimer->Finished()) {
+			chaseTarget(target_);
+		}
 		// Call the parent's update method to move the object in standard way, if desired
 		GameObject::Update(delta_time);
 	}
@@ -41,7 +44,7 @@ namespace game {
 		target_ = target;
 		targetDir_ = (target->GetPosition() - position_);
 		patrollingPosition_ = position_;
-		chaseTimer->Start(ReactionTime);
+		chaseTimer->Start(reaction_time_);
 		t = 0;
 	}
 

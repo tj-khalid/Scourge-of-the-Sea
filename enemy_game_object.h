@@ -7,15 +7,16 @@ namespace game {
 
     // Inherits from GameObject
     class EnemyGameObject : public GameObject {
-    protected:
+    public:
         enum State { Patrolling, Intercepting, Attacking, Other };
+    protected:
         State state;
         glm::vec3 patrollingPosition_;
         glm::vec3 targetDir_;
         GameObject* target_;
         Timer* chaseTimer;
         float detectionRadius_;
-        float ReactionTime;
+        float reaction_time_;
         float t;
 
 

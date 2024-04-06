@@ -9,7 +9,7 @@ namespace game {
     class EnemyShip : public EnemyGameObject {
     protected:
         
-        
+        bool shooting_;
 
 
     public:

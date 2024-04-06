@@ -23,6 +23,8 @@ namespace game {
 		default:
 			break;
 		case Enemy:
+		case EnemyShip:
+		case Shark:
 			setToDestroy_ = true;
 		}
 	}

@@ -26,16 +26,12 @@ namespace game {
             void SetTexture(GLuint texture) { texture_ = texture; }
 
             glm::vec3 GetVelocity(void) { return velocity_; }
-
-            
-
-            bool Shoot(void);
+                        
         protected:
             int coinCount_;
             int boozeCount_;
             int chestCount_;
             Timer* invicibiltyTimer_;
-            Timer* attackCooldown_;
             
 
             GLuint invincibleTexture_;

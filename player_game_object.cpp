@@ -18,7 +18,6 @@ PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Sh
 	boozeCount_ = 0;
 	chestCount_ = 0;
 	invicibiltyTimer_ = new Timer();
-	attackCooldown_ = new Timer();
 	normTexture_ = texture;
 	maxspeed = 2; 
 }
@@ -32,9 +31,9 @@ PlayerGameObject::~PlayerGameObject() {
 // Update function for moving the player object around
 void PlayerGameObject::Update(double delta_time) {
 	// Special player updates go here
-	if (coinCount_ == 5) {
+	if (boozeCount_ == 5) {
 		invicibiltyTimer_->Start(10);
-		coinCount_ = 0;
+		boozeCount_ = 0;
 	}
 	invicibiltyTimer_->Finished();
 	if (isInvicible()) {
@@ -52,35 +51,32 @@ void PlayerGameObject::Update(double delta_time) {
 
 void PlayerGameObject::CollideWith(GameObject* obj) {
 	switch (obj->GetObjectType()){
+		default:
+			break;
 		case Enemy:
 			if (!isInvicible())
 				TakeDamage(1);
 			break;
 		case Collectible:
 			CollectibleGameObject* collectable = (CollectibleGameObject*)obj;
-			if (collectable->getCollectType() == CollectibleGameObject::Coin) {
+			switch (collectable->getCollectType())
+			{
+			case CollectibleGameObject::Coin:
 				coinCount_++;
-			}
-			else if (collectable->getCollectType() == CollectibleGameObject::Booze) {
+				break;
+			case CollectibleGameObject::Booze:
 				boozeCount_++;
-			}
-			else if (collectable->getCollectType() == CollectibleGameObject::Chest) {
+				break;
+			case CollectibleGameObject::Chest:
 				chestCount_++;
-			}
-				
-			break;
-		default:
+				break;
+
+			default:
+				break;
+			}				
 			break;
 	}
 }
 
-bool PlayerGameObject::Shoot() {
-	attackCooldown_->Finished();
-	if (!attackCooldown_->Running())
-	{
-		attackCooldown_->Start(.6f);
-		return true;
-	}
-	return false;
-}
+
 } // namespace game

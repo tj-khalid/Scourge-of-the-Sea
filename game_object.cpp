@@ -5,7 +5,7 @@
 
 namespace game {
 
-    using namespace std;
+    
 
 GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture) 
 {
@@ -24,8 +24,10 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
     setToDestroy_ = false;
     ghost_mode_ = false;
     hp_ = 1;
-    velocity_ = glm::vec3(0.0f, 0.0f, 0.0f);
-    
+    velocity_ = vec3(0.0f);
+    attackCooldown_ = new Timer();
+    parent_ = nullptr;
+
 
     int width, height;
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -35,7 +37,7 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
     float wf = width, hf = height;
 
     scale_ = glm::vec3(wf / hf, 1.0f, 0.0f);
-    orbitPointOffset = position_ + glm::vec3(-scale_.x / 2.f, scale_.y / 2.f, 0.0f);
+    orbitPointOffset = position_ + vec3(-scale_.x / 2.f, scale_.y / 2.f, 0.0f);
 
     deathTimer_ = new Timer();
     collisionRadius_ = (scale_.x + scale_.y)/7;
@@ -43,6 +45,10 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
 
 GameObject::~GameObject() {
     delete deathTimer_;
+    for each (GameObject * child in children) {
+        child->setToDestroy_ = true;
+        delete child;
+    }
 }
 
 glm::vec3 GameObject::GetBearing(void) const {
@@ -78,9 +84,9 @@ void GameObject::Update(double delta_time) {
     if (isOrbiting_){
         orbitAngle_ += delta_time*1.5f;
 
-        float pi_over_two = glm::pi<float>() / 2.0f;
-        glm::vec3 right(cos(orbitAngle_ - pi_over_two), sin(orbitAngle_ - pi_over_two), 0.0);
-        glm::vec3 bearing(cos(orbitAngle_), sin(orbitAngle_), 0.0);
+        float pi_over_two = pi<float>() / 2.0f;
+        vec3 right(cos(orbitAngle_ - pi_over_two), sin(orbitAngle_ - pi_over_two), 0.0);
+        vec3 bearing(cos(orbitAngle_), sin(orbitAngle_), 0.0);
 
         // finding top left of texture
         right = right * -(scale_.x/2.f);
@@ -96,6 +102,9 @@ void GameObject::TakeDamage(int damage) {
 
 void GameObject::Render(glm::mat4 view_matrix, double current_time){
 
+    for each (GameObject * child in children) {
+        child->Render(view_matrix, current_time);
+    }
     // Set up the shader
     shader_->Enable();
 
@@ -149,35 +158,40 @@ void GameObject::SetGhostMode(bool mode) {
     ghost_mode_ = mode;
 }
 
-void GameObject::AddForce(glm::vec3& force) {
+void GameObject::AddForce(vec3& force) {
     velocity_ += force;
-    if (glm::length(velocity_) > maxspeed) {
-        velocity_ = glm::normalize(velocity_) * 2.0f;
+    if (length(velocity_) > maxspeed) {
+        velocity_ = normalize(velocity_) * 2.0f;
     }
 }
 
-bool GameObject::RayCollision(glm::vec3 rayObj, GameObject* circObj) {
-    glm::vec3 dir = rayObj;
-    glm::vec3 P = position_;
-    glm::vec3 C = circObj->GetPosition();
-    float a = glm::dot(dir, dir);
-    float b = glm::dot((2.f * dir), P - C);
-    float c = glm::dot(P - C, P - C) - std::pow(circObj->GetCollisionRadius(), 2);
-    float disc = std::pow(b, 2) - 4 * a * c;
-    float t1 = NULL, t2 = NULL;
-    if (disc < 0) {
-        return false; 
+bool GameObject::Shoot() {
+    attackCooldown_->Finished();
+    if (!attackCooldown_->Running())
+    {
+        attackCooldown_->Start(.6f);
+        return true;
     }
+    return false;
+}
+
+bool GameObject::RayCollision(vec3 rayObj, GameObject* circObj) {
+    vec3 dir = rayObj;
+    vec3 P = position_;
+    vec3 C = circObj->GetPosition();
+    float a = dot(dir, dir);
+    float b = dot((2.f * dir), P - C);
+    float c = dot(P - C, P - C) - pow(circObj->GetCollisionRadius(), 2);
+    float disc = pow(b, 2) - 4 * a * c;
+    float t1, t2;
+    if (disc < 0) {return false;}
     
     t1 = (-b + std::sqrt(disc)) / (2 * a);
     t2 = (-b - std::sqrt(disc)) / (2 * a);
 
     float closert = (t1 <= t2) ? t1 : t2;
-    if (closert < 2.0f) {
-        return true;
-    }
-
-    return false;
+    return (closert < 2.0f);
 }
+
 
 } // namespace game

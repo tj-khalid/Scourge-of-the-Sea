@@ -8,6 +8,10 @@
 #include "shader.h"
 #include "geometry.h"
 #include "timer.h"
+#include <vector>
+
+using namespace std;
+using namespace glm;
 
 namespace game {
 
@@ -21,18 +25,19 @@ namespace game {
 
     public:
         // Constructor
-        GameObject(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture);
+        GameObject(const vec3& position, Geometry* geom, Shader* shader, GLuint texture);
         ~GameObject();
         // Update the GameObject's state. Can be overriden in children
         virtual void Update(double delta_time);
 
         // Renders the GameObject 
-        virtual void Render(glm::mat4 view_matrix, double current_time);
+        virtual void Render(mat4 view_matrix, double current_time);
 
         virtual void CollideWith(GameObject*) {};
 
+        virtual void Destroy(void) {};
         // Getters
-        inline glm::vec3 GetPosition(void) const { return position_; }
+        inline vec3 GetPosition(void) const { return position_; }
         inline float GetScaleX(void) const { return scale_.x; }
         inline float GetScaleY(void) const { return scale_.y; }
         inline float GetRotation(void) const { return angle_; }
@@ -55,10 +60,12 @@ namespace game {
 
 
         // Setters
-        inline void SetPosition(const glm::vec3& position) { position_ = position; }
+        inline void SetPosition(const vec3& position) { position_ = position; }
         inline void SetScale(float scaleFactor) { scale_.x *= scaleFactor; scale_.y *= scaleFactor; collisionRadius_ *= scaleFactor; }
         inline void SetScaleX(float scale) { scale_.x = scale; collisionRadius_ = (scale_.x + scale_.y) / 7;}
         inline void SetScaleY(float scale) { scale_.y = scale; collisionRadius_ = (scale_.x + scale_.y) / 7;}
+        inline void SetParent(GameObject* p) { parent_ = p; }
+
         void SetRotation(float angle);
 
         void SetGhostMode(bool mode);
@@ -70,8 +77,10 @@ namespace game {
         // Reduces hp by damage
         void TakeDamage(int damage);
         //Add Force To Velocity
-        void AddForce(glm::vec3&);
-        bool RayCollision(glm::vec3 rayObj, GameObject* circObj);
+        void AddForce(vec3&);
+        bool RayCollision(vec3 rayObj, GameObject* circObj);
+        bool Shoot(void);
+        void addChild(GameObject* obj) { children.push_back(obj); obj->parent_ = this; }
 
         protected:
             // Object's Transform Variables
@@ -86,6 +95,7 @@ namespace game {
             bool ghost_mode_;
             bool isOrbiting_;
             bool setToDestroy_;
+            GameObject* parent_;
 
             float maxspeed;
 
@@ -94,6 +104,7 @@ namespace game {
             int hp_;
 
             // timer for deleting game object
+            Timer* attackCooldown_;
             Timer *deathTimer_;
 
             // Objects collidabilty
@@ -109,10 +120,10 @@ namespace game {
             // Shader
             Shader *shader_;
 
-
             // Object's texture reference
             GLuint texture_;
 
+            vector<GameObject*> children;
 
     }; // class GameObject
 

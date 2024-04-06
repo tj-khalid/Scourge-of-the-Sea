@@ -12,14 +12,10 @@ namespace game {
 
 	Shark::Shark(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
 		: EnemyGameObject(position, geom, shader, texture) {
-		ReactionTime = 1.0f;
-		type_ = GameObject::Enemy;
+		reaction_time_ = 1.0f;
+		type_ = GameObject::Shark;
 	}
 
-	Shark::~Shark() {
-		GameObject::~GameObject();
-		delete chaseTimer;
-	}
 	// Update function for moving the player object around
 	void Shark::Update(double delta_time) {
 		// Special enemy updates go here
@@ -40,11 +36,8 @@ namespace game {
 			default:
 				break;
 		}
-		if (chaseTimer->Finished()) {
-			chaseTarget(target_);
-		}
 		// Call the parent's update method to move the object in standard way, if desired
-		GameObject::Update(delta_time);
+		EnemyGameObject::Update(delta_time);
 	}
 
 } // namespace game

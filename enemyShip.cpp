@@ -13,37 +13,32 @@ namespace game {
 	EnemyShip::EnemyShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
 		: EnemyGameObject(position, geom, shader, texture) {
 		maxspeed = 2.5f;
-		type_ = GameObject::Enemy;
-		ReactionTime = 1.0f;
+		reaction_time_ = 1.0f;
+		type_ = GameObject::EnemyShip;
 	}
 
 	EnemyShip::~EnemyShip() {
-		GameObject::~GameObject();
-		delete chaseTimer;
+		EnemyGameObject::~EnemyGameObject();
 	}
 	// Update function for moving the player object around
 	void EnemyShip::Update(double delta_time) {
 		// Special enemy updates go here
 		t += delta_time;
 		float speed = 1.5f;
-		float pi_over_two = glm::pi<float>() / 2.0f;
+		float pi_over_two = pi<float>() / 2.0f;
 		//std::cout << state << std::endl;
 
-
-
+		//cout << targetDir_.x << " " << targetDir_.y << endl;
 		switch (state) {
 		case Intercepting:
 			AddForce((targetDir_ + target_->GetBearing() * 2.f) * (float)delta_time);
-			if (RayCollision(GetRight(), target_) == true) {
+			if (RayCollision(GetRight(), target_)) {
 			}
 		}
-		SetRotation(std::atan2(glm::normalize(velocity_).y, glm::normalize(velocity_).x));
+		SetRotation(atan2(normalize(velocity_).y, normalize(velocity_).x));
 
-		if (chaseTimer->Finished()) {
-			chaseTarget(target_);
-		}
 		// Call the parent's update method to move the object in standard way, if desired
-		GameObject::Update(delta_time);
+		EnemyGameObject::Update(delta_time);
 	}
 
 } // namespace game

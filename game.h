@@ -63,10 +63,6 @@ namespace game {
             Timer* spawnEnemyTimer_;
             Timer* closeTimer_;
 
-            glm::vec3 collectible_spawn_points[4];
-            glm::vec3 enemy_spawn_points[4];
-            int cSpawnCounter;
-            int eSpawnCounter;
             // Callback for when the window is resized
             static void ResizeCallback(GLFWwindow* window, int width, int height);
 

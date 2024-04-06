@@ -80,13 +80,6 @@ void Game::Init(void)
     spawnEnemyTimer_ = new Timer();
     closeTimer_ = new Timer();
 
-    enemy_spawn_points[0] = glm::vec3(2.f, 2.f, 0.f);
-    enemy_spawn_points[1] = glm::vec3(-2.f, 2.f, 0.f);
-    enemy_spawn_points[2] = glm::vec3(2.f, -2.f, 0.f);
-    enemy_spawn_points[3] = glm::vec3(-2.f, -2.f, 0.f);
-
-    cSpawnCounter = 0;
-    eSpawnCounter = 0;
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
 
@@ -148,14 +141,14 @@ void Game::Setup(void)
     
     */
     spawnCollectibleTimer_->Start(3);
-    spawnEnemyTimer_->Start(7);
+    spawnEnemyTimer_->Start(5);
     
     // Setup background
     // In this specific implementation, the background is always the
     // last object
     GameObject *background = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[3]);
-    background->SetScale(60.0f);
-    background->SetTiling(3.0f);
+    background->SetScale(20.0f * 7.f);
+    background->SetTiling(7.f);
     game_objects_.push_back(background);
 }
 
@@ -301,9 +294,9 @@ void Game::HandleControls(double delta_time)
     }
     if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (player->Shoot()) {
-            GameObject* bulletRight = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .40f, game_objects_.size() - 2);
+            GameObject* bulletRight = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 2);
             bulletRight->SetRotation(player->GetAngle() - glm::pi<float>()/2);
-            GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .40f, game_objects_.size() - 2);
+            GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 2);
             bulletLeft->SetRotation(player->GetAngle() + glm::pi<float>() / 2);
         }
     }
@@ -340,13 +333,14 @@ void Game::Update(double delta_time){
             case GameObject::Player:
                 closeTimer_->Start(5);
             case GameObject::Enemy:
+            case GameObject::EnemyShip:
                 glm::vec3 curPos = current_game_object->GetPosition();
-
+                
                 delete game_objects_[i];
                 game_objects_.erase(game_objects_.begin() + i);
-
                 SpawnObject(GameObject::Other, curPos, tex_[7], 1 / 1.f, i);
                 game_objects_[i]->GetDeathTimer()->Start(5);
+                
                 break;
             }
             i--;
@@ -377,14 +371,24 @@ void Game::Update(double delta_time){
                 }
             }
             
+            if (i == 0) {
+                switch (other_game_object->GetObjectType())
+                {
+                case GameObject::Enemy:
+                case GameObject::EnemyShip:
+                case GameObject::Shark:
+                    EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
 
-            if (other_game_object->GetObjectType() == GameObject::Enemy && current_game_object->GetObjectType() == GameObject::Player) {
-                EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
-                if (distance <= enemy->getDetectionRadius() && enemy->getState() == 0) {
-                    enemy->chaseTarget(current_game_object);
+                    if (enemy->getState() == EnemyGameObject::Intercepting){break;}
+
+                    if (length(enemy->GetPosition() - game_objects_[0]->GetPosition()) < enemy->getDetectionRadius()) {
+                        enemy->chaseTarget(game_objects_[0]);
+                    }
+                break;
                 }
             }
-        }
+            }
+            
     }
 
     if (spawnCollectibleTimer_->Finished()){
@@ -413,19 +417,19 @@ void Game::Update(double delta_time){
         int random_angle = std::rand() % 360 + 1;
         int random_enemy = std::rand() % 2;
         glm::vec3 randomEnemySpawn = (game_objects_[0]->GetPosition() + glm::vec3(std::cos(random_angle), std::sin(random_angle), 0) * 5.0f);
-
-        if (random_enemy == 0) {
+        switch (random_enemy)
+        {
+        case 0:
             SpawnObject(GameObject::Shark, randomEnemySpawn, tex_[12], 1.f / 2.f, game_objects_.size() - 1);
+            break;
+        case 1:
+            EnemyGameObject* enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
+            enemy->chaseTarget(game_objects_[0]);
+            break;
         }
-        else if (random_enemy == 1) {
-            SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
-        }
-        
-        
-        spawnEnemyTimer_->Start(10);
-    }
-
-}
+        spawnEnemyTimer_->Start(5);
+    }       
+ }
 
 
 void Game::Render(void){
@@ -463,7 +467,7 @@ void Game::Render(void){
 }
 
 
-GameObject* Game::SpawnObject(GameObject::ObjectType type, const glm::vec3& position, GLuint texture, float scale, int index) {
+GameObject* Game::SpawnObject(GameObject::ObjectType type, const vec3& position, GLuint texture, float scale, int index) {
     GameObject* newObject;
     switch (type) {
     case GameObject::Player:
@@ -503,28 +507,21 @@ GameObject* Game::SpawnObject(GameObject::ObjectType type, const glm::vec3& posi
 }
 
 bool Game::RayCollision(GameObject* rayObj, GameObject* circObj) {
-    glm::vec3 dir = rayObj->GetBearing();
-    glm::vec3 P = rayObj->GetPosition();
-    glm::vec3 C = circObj->GetPosition();
-    float a = glm::dot(dir, dir);
-    float b = glm::dot((2.f * dir), P - C);
-    float c = glm::dot(P - C, P - C) - std::pow(circObj->GetCollisionRadius(), 2);
-    float disc = std::pow(b, 2) - 4 * a * c;
-    float t1 = NULL, t2 = NULL;
-    if (disc < 0) {
-
-    }
-    else {
-        t1 = (-b + std::sqrt(disc)) / (2 * a);
-        t2 = (-b - std::sqrt(disc)) / (2 * a);
-    }
-    if (t1 != NULL) {
-        float closert = (t1 <= t2) ? t1 : t2;
-        if (closert > 0 && closert < 0.5f) {
-            return true;
-        }
-    }
-    return false;
+    vec3 dir = rayObj->GetBearing();
+    vec3 P = rayObj->GetPosition();
+    vec3 C = circObj->GetPosition();
+    float a = dot(dir, dir);
+    float b = dot((2.f * dir), P - C);
+    float c = dot(P - C, P - C) - (circObj->GetCollisionRadius(), 2);
+    float disc = pow(b, 2) - 4 * a * c;
+    float t1, t2;
+    if (disc < 0) { return false; }
+     
+    t1 = (-b + std::sqrt(disc)) / (2 * a);
+    t2 = (-b - std::sqrt(disc)) / (2 * a);
+    
+    float closert = (t1 <= t2) ? t1 : t2;
+    return (closert > 0 && closert < 0.25f);
 }
 
 } // namespace game
