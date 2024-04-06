@@ -53,8 +53,18 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 		default:
 			break;
 		case Enemy:
-			if (!isInvicible())
+		case Shark:
+		case EnemyShip:
+			if (!isInvicible()) {
 				TakeDamage(1);
+				for each (GameObject* chils in children)
+				{
+					if (chils->GetObjectType() == HpText) {
+						TextGameObject* hptext = (TextGameObject*)chils;
+						hptext->SetText("HP: " + to_string(hp_));
+					}
+				}
+			}
 			break;
 		case Collectible:
 			CollectibleGameObject* collectable = (CollectibleGameObject*)obj;

@@ -124,31 +124,23 @@ void Game::Setup(void)
 
 
     // Set up text quad
-    TextGameObject* text = new TextGameObject(glm::vec3(-3.f, 4.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
+    TextGameObject* text = new TextGameObject(glm::vec3(-3.5f, 4.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
     text->SetScaleX(4.5);
     text->SetScaleY(.75);
     text->SetText("Coins: 0");
+    text->SetObjectType(GameObject::CoinsText);
     player->addChild(text);
-
+    TextGameObject* Hptext = new TextGameObject(glm::vec3(-4.f, 3.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
+    Hptext->SetScaleX(3);
+    Hptext->SetScaleY(.75);
+    Hptext->SetText("HP: "+ to_string(player->GetHP()));
+    Hptext->SetObjectType(GameObject::HpText);
+    player->addChild(Hptext);
     // Setup other objects
 
 
    Shark* SharkTest =  (Shark*)SpawnObject(GameObject::Shark, glm::vec3(4.0f, -4.5f, 0.0f), tex_[12], 1.f/2.f);
-   cout << SharkTest->getState() << std::endl;
 
-    //SpawnObject(GameObject::EnemyShip, glm::vec3(-2.5f, -1.5f, 0.0f), tex_[6], 1.f / 2.f);
-    /*
-    
-    SpawnObject(GameObject::Enemy, glm::vec3(-2.5f, -2.0f, 0.0f), tex_[6], 1.f / 2.f);
-    SpawnObject(GameObject::Enemy, glm::vec3(2.0f, 2.0f, 0.0f), tex_[6], 1.f / 2.f);
-
-    SpawnObject(GameObject::Collectible, glm::vec3(-1.5f, 1.5f, 0.0f), tex_[8], 1.f / 3.f);
-    SpawnObject(GameObject::Collectible, glm::vec3(1.5f, -1.5f, 0.0f), tex_[8], 1.f / 3.f);
-    SpawnObject(GameObject::Collectible, glm::vec3(-1.5f, -2.5f, 0.0f), tex_[8], 1.f / 3.f);
-    SpawnObject(GameObject::Collectible, glm::vec3(2.5f, 1.5f, 0.0f), tex_[8], 1.f / 3.f);
-    SpawnObject(GameObject::Collectible, glm::vec3(2.5f, -1.5f, 0.0f), tex_[8], 1.f / 3.f);
-    
-    */
     spawnCollectibleTimer_->Start(3);
     spawnEnemyTimer_->Start(5);
     

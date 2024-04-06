@@ -16,6 +16,7 @@ namespace game {
             // Text to be displayed
             std::string GetText(void) const;
             void SetText(std::string text);
+            void SetObjectType(ObjectType t) { type_ = t; }
 
             // Render function for the text
             void Render(glm::mat4 view_matrix, double current_time) override;
