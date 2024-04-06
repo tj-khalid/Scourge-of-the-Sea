@@ -1,5 +1,4 @@
 #include "player_game_object.h"
-#include "collectible_game_object.h"
 
 #include <iostream>
 namespace game {
@@ -59,24 +58,33 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 			break;
 		case Collectible:
 			CollectibleGameObject* collectable = (CollectibleGameObject*)obj;
-			switch (collectable->getCollectType())
-			{
-			case CollectibleGameObject::Coin:
-				coinCount_++;
-				break;
-			case CollectibleGameObject::Booze:
-				boozeCount_++;
-				break;
-			case CollectibleGameObject::Chest:
-				chestCount_++;
-				break;
-
-			default:
-				break;
-			}				
+			AddCollectible(collectable);
 			break;
 	}
 }
 
+void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
+	switch (collectible->getCollectType())
+	{
+	case CollectibleGameObject::Chest:
+		coinCount_ += 4;
+	case CollectibleGameObject::Coin:
+		coinCount_++;
+		for each (GameObject* child in children){
+			if (child->GetObjectType() == CoinsText) {
+				TextGameObject* coinText = (TextGameObject*) child;
+				coinText->SetText("Coins: " + to_string(coinCount_));
+			}
+		}
+		break;
+	case CollectibleGameObject::Booze:
+		boozeCount_++;
+		break;
+
+
+	default:
+		break;
+	}
+}
 
 } // namespace game

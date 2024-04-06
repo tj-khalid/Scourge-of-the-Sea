@@ -16,7 +16,7 @@
 #include "game.h"
 #include "shark.h"
 #include "EnemyShip.h"
-
+#include "text_game_object.h"
 
 using namespace std; 
 
@@ -82,6 +82,7 @@ void Game::Init(void)
 
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
+    text_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/text_fragment_shader.glsl")).c_str());
 
     // Initialize time
     current_time_ = 0.0;
@@ -120,6 +121,14 @@ void Game::Setup(void)
     SpawnObject(GameObject::Player, glm::vec3(0.0f, 0.f, 0.0f), tex_[5], 3/1.5f);
     PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
     player->SetInvincibleTex(tex_[9]);
+
+
+    // Set up text quad
+    TextGameObject* text = new TextGameObject(glm::vec3(-3.f, 4.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
+    text->SetScaleX(4.5);
+    text->SetScaleY(.75);
+    text->SetText("Coins: 0");
+    player->addChild(text);
 
     // Setup other objects
 
@@ -203,7 +212,8 @@ void Game::SetAllTextures(void)
         "/textures/axe.png",
         "/textures/cannon ball.png",
         "/textures/hai-fin-shadow.png",
-        "/textures/chest.png"
+        "/textures/chest.png",
+        "/textures/font.png"
 
     
     };
@@ -294,9 +304,9 @@ void Game::HandleControls(double delta_time)
     }
     if (glfwGetKey(window_, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (player->Shoot()) {
-            GameObject* bulletRight = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 2);
+            GameObject* bulletRight = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
             bulletRight->SetRotation(player->GetAngle() - glm::pi<float>()/2);
-            GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 2);
+            GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
             bulletLeft->SetRotation(player->GetAngle() + glm::pi<float>() / 2);
         }
     }
@@ -521,7 +531,7 @@ bool Game::RayCollision(GameObject* rayObj, GameObject* circObj) {
     t2 = (-b - std::sqrt(disc)) / (2 * a);
     
     float closert = (t1 <= t2) ? t1 : t2;
-    return (closert > 0 && closert < 0.25f);
+    return (closert > 0 && closert < 0.05f);
 }
 
 } // namespace game

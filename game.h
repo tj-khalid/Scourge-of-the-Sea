@@ -45,6 +45,7 @@ namespace game {
 
             // Shader for rendering sprites in the scene
             Shader sprite_shader_;
+            Shader text_shader_;
 
             // Shader for rendering particles
             Shader particle_shader_;

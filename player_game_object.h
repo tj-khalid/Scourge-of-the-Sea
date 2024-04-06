@@ -2,6 +2,8 @@
 #define PLAYER_GAME_OBJECT_H_
 
 #include "game_object.h"
+#include "collectible_game_object.h"
+#include "text_game_object.h"
 
 namespace game {
 
@@ -17,7 +19,7 @@ namespace game {
 
             void CollideWith(GameObject*) override;
 
-            void AddCollectible();
+            void AddCollectible(CollectibleGameObject*);
 
             bool isInvicible() { return invicibiltyTimer_->Running(); }
 

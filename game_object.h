@@ -21,7 +21,7 @@ namespace game {
     */
     class GameObject {
     public:
-        enum ObjectType {Player, Enemy, Collectible, SwingingAxe, Other, Bullet, Shark, EnemyShip};
+        enum ObjectType {Player, Enemy, Collectible, SwingingAxe, Other, Bullet, Shark, EnemyShip, CoinsText};
 
     public:
         // Constructor
