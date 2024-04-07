@@ -28,6 +28,9 @@ namespace game {
             void SetTexture(GLuint texture) { texture_ = texture; }
 
             glm::vec3 GetVelocity(void) { return velocity_; }
+
+            inline int getCoinCount() const { return coinCount_; };
+            inline void setCoinCount(int s) { coinCount_ = s; };
                         
         protected:
             int coinCount_;

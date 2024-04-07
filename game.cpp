@@ -16,6 +16,7 @@
 #include "game.h"
 #include "shark.h"
 #include "EnemyShip.h"
+#include "harpoonShip.h"
 #include "text_game_object.h"
 
 using namespace std; 
@@ -198,14 +199,15 @@ void Game::SetAllTextures(void)
         "/textures/orb.png",
         "/textures/player_ship.png",
         "/textures/ship.png",
-        "/textures/explosion.png",
+        "/textures/shipwreck.png",
         "/textures/coin.png",
         "/textures/barrel.png",
         "/textures/axe.png",
         "/textures/cannon ball.png",
         "/textures/hai-fin-shadow.png",
         "/textures/chest.png",
-        "/textures/font.png"
+        "/textures/font.png",
+        "/textures/shipwreck.png"
 
     
     };
@@ -342,7 +344,9 @@ void Game::Update(double delta_time){
                 game_objects_.erase(game_objects_.begin() + i);
                 SpawnObject(GameObject::Other, curPos, tex_[7], 1 / 1.f, i);
                 game_objects_[i]->GetDeathTimer()->Start(5);
-                
+                PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
+                player->setCoinCount(player->getCoinCount() + 1);
+
                 break;
             }
             i--;
@@ -379,6 +383,7 @@ void Game::Update(double delta_time){
                 case GameObject::Enemy:
                 case GameObject::EnemyShip:
                 case GameObject::Shark:
+                case GameObject::HarpoonShip:
                     EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
 
                     if (enemy->getState() == EnemyGameObject::Intercepting){break;}
@@ -421,16 +426,31 @@ void Game::Update(double delta_time){
         glm::vec3 randomEnemySpawn = (game_objects_[0]->GetPosition() + glm::vec3(std::cos(random_angle), std::sin(random_angle), 0) * 5.0f);
         switch (random_enemy)
         {
+            EnemyGameObject* enemy;
         case 0:
             SpawnObject(GameObject::Shark, randomEnemySpawn, tex_[12], 1.f / 2.f, game_objects_.size() - 1);
             break;
         case 1:
-            EnemyGameObject* enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
+            enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
             enemy->chaseTarget(game_objects_[0]);
             break;
-        }
+        case 2:
+            enemy = (EnemyGameObject*)SpawnObject(GameObject::HarpoonShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
+            enemy->chaseTarget(game_objects_[0]);
+            break;
+    }
         spawnEnemyTimer_->Start(5);
-    }       
+    }  
+
+    //Win Condition
+    if (game_objects_[0]->GetObjectType() == GameObject::Player) {
+        PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
+        if (player->getCoinCount() >= 100) {
+            cout << "You Win!";
+            closeTimer_->Start(5);
+        }
+    }
+
  }
 
 
@@ -492,6 +512,9 @@ GameObject* Game::SpawnObject(GameObject::ObjectType type, const vec3& position,
         break;
     case GameObject::EnemyShip:
         newObject = new EnemyShip(position, sprite_, &sprite_shader_, texture);
+        break;
+    case GameObject::HarpoonShip:
+        newObject = new HarpoonShip(position, sprite_, &sprite_shader_, texture);
         break;
     }
 

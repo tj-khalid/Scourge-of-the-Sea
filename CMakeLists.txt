@@ -22,6 +22,7 @@ set(HDRS
     shark.h
     enemyShip.h
     text_game_object.h
+    harpoonShip.h
 )
  
 set(SRCS
@@ -41,6 +42,7 @@ set(SRCS
     shark.cpp
     enemyShip.cpp
     text_game_object.cpp
+    harpoonShip.cpp
     particle_vertex_shader.glsl
     text_fragment_shader.glsl
     particle_fragment_shader.glsl

@@ -28,7 +28,7 @@ void main()
     }
 
     // Check for transparency
-    if(color.a < 1.0)
+    if(color.a < 0.25)
     {
          discard;
     }

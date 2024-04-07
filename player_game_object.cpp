@@ -33,6 +33,9 @@ void PlayerGameObject::Update(double delta_time) {
 	if (boozeCount_ == 5) {
 		invicibiltyTimer_->Start(10);
 		boozeCount_ = 0;
+		if (hp_ < 3) {
+			hp_++;
+		}
 	}
 	invicibiltyTimer_->Finished();
 	if (isInvicible()) {
