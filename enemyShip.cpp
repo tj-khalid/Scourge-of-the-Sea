@@ -12,7 +12,7 @@ namespace game {
 
 	EnemyShip::EnemyShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
 		: EnemyGameObject(position, geom, shader, texture) {
-		maxspeed = 2.5f;
+		maxspeed = 4.5f;
 		reaction_time_ = 1.0f;
 		type_ = GameObject::EnemyShip;
 	}
@@ -31,8 +31,14 @@ namespace game {
 		//cout << targetDir_.x << " " << targetDir_.y << endl;
 		switch (state) {
 		case Intercepting:
-			AddForce((targetDir_ + target_->GetBearing() * 2.f) * (float)delta_time);
+			AddForce((targetDir_ + target_->GetBearing() * 4.f) * (float)delta_time);
 			if (RayCollision(GetRight(), target_)) {
+				shooting_ = true;
+				cout << "shooting" << endl;
+			}
+			else {
+				shooting_ = false;
+				//cout << "not shooting" << endl;
 			}
 		}
 		SetRotation(atan2(normalize(velocity_).y, normalize(velocity_).x));

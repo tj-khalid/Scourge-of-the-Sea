@@ -175,7 +175,7 @@ void GameObject::SetGhostMode(bool mode) {
 void GameObject::AddForce(vec3& force) {
     velocity_ += force;
     if (length(velocity_) > maxspeed) {
-        velocity_ = normalize(velocity_) * 2.0f;
+        velocity_ = normalize(velocity_) * maxspeed;
     }
 }
 

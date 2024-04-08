@@ -18,6 +18,7 @@ namespace game {
         float detectionRadius_;
         float reaction_time_;
         float t;
+        bool shooting_;
 
 
     public:
@@ -34,6 +35,8 @@ namespace game {
         void chaseTarget(GameObject* target);
 
         State getState(void) const { return state; }
+
+        virtual bool Shoot();
     }; // class EnemyGameObject
 
 } // namespace game

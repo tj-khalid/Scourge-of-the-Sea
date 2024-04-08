@@ -25,6 +25,7 @@ namespace game {
 		case Enemy:
 		case EnemyShip:
 		case Shark:
+		case Player:
 			setToDestroy_ = true;
 		}
 	}

@@ -19,7 +19,7 @@ namespace game {
 		type_ = Enemy;
 		patrollingPosition_ = position_;
 		t = 0;
-
+		shooting_ = false;
 
 		chaseTimer = new Timer;
 	}
@@ -57,5 +57,15 @@ namespace game {
 		default:
 			break;
 		}
+	}
+
+	bool EnemyGameObject::Shoot() {
+		attackCooldown_->Finished();
+		if (!attackCooldown_->Running() && shooting_)
+		{
+			attackCooldown_->Start(.6f);
+			return true;
+		}
+		return false;
 	}
 } // namespace game

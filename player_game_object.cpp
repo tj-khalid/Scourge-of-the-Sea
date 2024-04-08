@@ -18,7 +18,7 @@ PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Sh
 	chestCount_ = 0;
 	invicibiltyTimer_ = new Timer();
 	normTexture_ = texture;
-	maxspeed = 2; 
+	maxspeed = 4; 
 }
 
 PlayerGameObject::~PlayerGameObject() {
@@ -58,6 +58,7 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 		case Enemy:
 		case Shark:
 		case EnemyShip:
+		case Bullet:
 			if (!isInvicible()) {
 				TakeDamage(1);
 				for each (GameObject* chils in children)
@@ -73,6 +74,7 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 			CollectibleGameObject* collectable = (CollectibleGameObject*)obj;
 			AddCollectible(collectable);
 			break;
+
 	}
 }
 

@@ -79,7 +79,7 @@ namespace game {
         //Add Force To Velocity
         void AddForce(vec3&);
         bool RayCollision(vec3 rayObj, GameObject* circObj);
-        bool Shoot(void);
+        virtual bool Shoot(void);
         void addChild(GameObject* obj) { children.push_back(obj); obj->parent_ = this; }
 
         protected:

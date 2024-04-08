@@ -149,8 +149,8 @@ void Game::Setup(void)
     // In this specific implementation, the background is always the
     // last object
     GameObject *background = new GameObject(glm::vec3(0.0f, 0.0f, 0.0f), sprite_, &sprite_shader_, tex_[3]);
-    background->SetScale(20.0f * 7.f);
-    background->SetTiling(7.f);
+    background->SetScale(20.0f * 21.f);
+    background->SetTiling(21.f);
     game_objects_.push_back(background);
 }
 
@@ -192,22 +192,23 @@ void Game::SetAllTextures(void)
     // Load all textures that we will need
     // Declare all the textures here
     const char *texture[] = {
-        "/textures/destroyer_red.png", 
-        "/textures/destroyer_green.png", 
-        "/textures/destroyer_blue.png", 
-        "/textures/water.png", 
-        "/textures/orb.png",
-        "/textures/player_ship.png",
-        "/textures/ship.png",
-        "/textures/shipwreck.png",
-        "/textures/coin.png",
-        "/textures/barrel.png",
-        "/textures/axe.png",
-        "/textures/cannon ball.png",
-        "/textures/hai-fin-shadow.png",
-        "/textures/chest.png",
-        "/textures/font.png",
-        "/textures/shipwreck.png"
+        "/textures/destroyer_red.png", //0
+        "/textures/destroyer_green.png", //1
+        "/textures/destroyer_blue.png", //2
+        "/textures/water.png", //3
+        "/textures/orb.png",//4
+        "/textures/player_ship.png",//5
+        "/textures/ship.png",//6
+        "/textures/shipwreck.png",//7
+        "/textures/coin.png",//8
+        "/textures/barrel.png",//9
+        "/textures/axe.png",//10
+        "/textures/cannon ball.png",//11
+        "/textures/hai-fin-shadow.png",//12
+        "/textures/chest.png",//13
+        "/textures/font.png",//14
+        "/textures/shipwreck.png",//15
+        "/textures/navy.png"//16
 
     
     };
@@ -314,7 +315,6 @@ void Game::Update(double delta_time){
     current_time_ += delta_time;
 
     if (closeTimer_->Finished()) {
-        std::cout << "Game Over!";
         glfwSetWindowShouldClose(window_, true);
         return;
     }
@@ -336,16 +336,19 @@ void Game::Update(double delta_time){
                 break;
             case GameObject::Player:
                 closeTimer_->Start(5);
+                std::cout << "Game Over!";
             case GameObject::Enemy:
             case GameObject::EnemyShip:
                 glm::vec3 curPos = current_game_object->GetPosition();
-                
+
+                PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
+                player->setCoinCount(player->getCoinCount() + 1);
+
                 delete game_objects_[i];
                 game_objects_.erase(game_objects_.begin() + i);
                 SpawnObject(GameObject::Other, curPos, tex_[7], 1 / 1.f, i);
                 game_objects_[i]->GetDeathTimer()->Start(5);
-                PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
-                player->setCoinCount(player->getCoinCount() + 1);
+                
 
                 break;
             }
@@ -385,6 +388,13 @@ void Game::Update(double delta_time){
                 case GameObject::Shark:
                 case GameObject::HarpoonShip:
                     EnemyGameObject* enemy = (EnemyGameObject*)other_game_object;
+
+                    if (enemy->Shoot()) {
+                        GameObject* bulletRight = SpawnObject(GameObject::Bullet, enemy->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
+                        bulletRight->SetRotation(enemy->GetAngle() - glm::pi<float>() / 2);
+                        GameObject* bulletLeft = SpawnObject(GameObject::Bullet, enemy->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
+                        bulletLeft->SetRotation(enemy->GetAngle() + glm::pi<float>() / 2);
+                    }
 
                     if (enemy->getState() == EnemyGameObject::Intercepting){break;}
 
@@ -427,11 +437,11 @@ void Game::Update(double delta_time){
         switch (random_enemy)
         {
             EnemyGameObject* enemy;
-        case 0:
             SpawnObject(GameObject::Shark, randomEnemySpawn, tex_[12], 1.f / 2.f, game_objects_.size() - 1);
             break;
+        case 0:
         case 1:
-            enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[6], 1.f / 2.f, game_objects_.size() - 1);
+            enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[16], 1.f / 2.f, game_objects_.size() - 1);
             enemy->chaseTarget(game_objects_[0]);
             break;
         case 2:
@@ -443,11 +453,11 @@ void Game::Update(double delta_time){
     }  
 
     //Win Condition
-    if (game_objects_[0]->GetObjectType() == GameObject::Player) {
+    if (game_objects_[0]->GetObjectType() == GameObject::Player && !closeTimer_->Running()) {
         PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
-        if (player->getCoinCount() >= 100) {
+        if (player->getCoinCount() >= 10) {
             cout << "You Win!";
-            closeTimer_->Start(5);
+            closeTimer_->Start(2);
         }
     }
 

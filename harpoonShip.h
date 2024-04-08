@@ -8,9 +8,6 @@ namespace game {
     // Inherits from GameObject
     class HarpoonShip : public EnemyGameObject {
     protected:
-        
-        bool shooting_;
-
 
     public:
         HarpoonShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture);
@@ -19,7 +16,6 @@ namespace game {
         // Update function for moving the player object around
         void Update(double delta_time) override;
 
-        void Shoot();
 
     }; // class EnemyGameObject
 
