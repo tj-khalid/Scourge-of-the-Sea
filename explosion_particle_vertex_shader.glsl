@@ -19,13 +19,14 @@ out vec2 uv_interp;
 void main()
 {
     vec4 pos; // Vertex position
-    float cycle = 3.0; // Duration of cycle in seconds
-    float speed = 8.0; // Speed adjustment constant
+    float cycle = 1.0; // Duration of cycle in seconds
+    float speed = 7.0; // Speed adjustment constant
     float gravity = 2.8; // Gravity in this world
     float acttime; // Cyclic time
 
     // Add phase to the time and cycle it
-    acttime = mod(time + t*cycle, cycle);
+//    acttime = mod(time + t*cycle, cycle);
+    acttime = time + t;
 
     // Move particle along given direction
     pos = vec4(vertex.x + acttime*speed*dir.x , vertex.y + acttime*speed*dir.y , 0.0, 1.0);
@@ -43,7 +44,7 @@ void main()
     gl_Position = view_matrix*transformation_matrix*pos;
     
     // Set color
-    //color_interp = vec4(0.5+0.5*cos(4*acttime),0.5*sin(4*acttime)+0.5,0.5, 1.0);
+//    color_interp = vec4(0.5+0.5*cos(4*acttime),0.5*sin(4*acttime)+0.5,0.5, 1.0);
     color_interp = vec4(t, 0.0, 0.0, 1.0);
 
     // Transfer texture coordinates

@@ -23,6 +23,8 @@ namespace game {
 
             bool isInvicible() { return invicibiltyTimer_->Running(); }
 
+            bool Shoot2();
+
             void SetInvincibleTex(GLuint text) { invincibleTexture_ = text; }
 
             void SetTexture(GLuint texture) { texture_ = texture; }
@@ -30,14 +32,21 @@ namespace game {
             glm::vec3 GetVelocity(void) { return velocity_; }
 
             inline int getCoinCount() const { return coinCount_; };
-            inline void setCoinCount(int s) { coinCount_ = s; };
+            inline void setCoinCount(int s) { coinCount_ = s;
+            for each (GameObject * child in children) {
+                if (child->GetObjectType() == CoinsText) {
+                    TextGameObject* coinText = (TextGameObject*)child;
+                    coinText->SetText("Coins: " + to_string(coinCount_));
+                }
+            }
+            };
                         
         protected:
             int coinCount_;
             int boozeCount_;
             int chestCount_;
             Timer* invicibiltyTimer_;
-            
+            Timer* secondAttackCooldown_;
 
             GLuint invincibleTexture_;
             GLuint normTexture_;

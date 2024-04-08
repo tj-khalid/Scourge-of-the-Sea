@@ -34,7 +34,6 @@ namespace game {
 			AddForce((targetDir_ + target_->GetBearing() * 4.f) * (float)delta_time);
 			if (RayCollision(GetRight(), target_)) {
 				shooting_ = true;
-				cout << "shooting" << endl;
 			}
 			else {
 				shooting_ = false;

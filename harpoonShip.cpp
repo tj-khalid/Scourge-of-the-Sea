@@ -12,9 +12,10 @@ namespace game {
 
 	HarpoonShip::HarpoonShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
 		: EnemyGameObject(position, geom, shader, texture) {
-		maxspeed = 2.5f;
-		reaction_time_ = 1.0f;
+		maxspeed = 3.f;
+		reaction_time_ = .05f;
 		type_ = GameObject::HarpoonShip;
+		attackcooldowntime_ = 1.f;
 	}
 
 	HarpoonShip::~HarpoonShip() {
@@ -31,8 +32,11 @@ namespace game {
 		case Intercepting:
 			AddForce((targetDir_) * (float)delta_time);
 			if (length(targetDir_) <= 2.0f) {
-				//Shoot Harpoon
-				cout << "Shoot";
+				shooting_ = true;
+			}
+			else {
+				shooting_ = false;
+				//cout << "not shooting" << endl;
 			}
 		}
 		SetRotation(atan2(normalize(velocity_).y, normalize(velocity_).x));

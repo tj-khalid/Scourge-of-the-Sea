@@ -105,6 +105,7 @@ namespace game {
 
             // timer for deleting game object
             Timer* attackCooldown_;
+            float attackcooldowntime_;
             Timer *deathTimer_;
 
             // Objects collidabilty

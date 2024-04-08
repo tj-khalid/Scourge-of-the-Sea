@@ -41,6 +41,8 @@ GameObject::GameObject(const glm::vec3 &position, Geometry *geom, Shader *shader
 
     deathTimer_ = new Timer();
     collisionRadius_ = (scale_.x + scale_.y)/7;
+
+    attackcooldowntime_ = .6f;
 }
 
 GameObject::~GameObject() {
@@ -183,7 +185,7 @@ bool GameObject::Shoot() {
     attackCooldown_->Finished();
     if (!attackCooldown_->Running())
     {
-        attackCooldown_->Start(.6f);
+        attackCooldown_->Start(attackcooldowntime_);
         return true;
     }
     return false;

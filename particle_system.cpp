@@ -9,12 +9,13 @@ namespace game {
 ParticleSystem::ParticleSystem(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GameObject *parent)
 	: GameObject(position, geom, shader, texture){
 
+    //parent->addChild(this);
     parent_ = parent;
 }
 
 
 void ParticleSystem::Update(double delta_time) {
-
+    if (parent_ == nullptr || parent_->isSetToDestroy()) { setToDestroy_ = true; }
     // Call the parent's update method to move the object in standard way, if desired
     GameObject::Update(delta_time);
 }

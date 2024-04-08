@@ -10,13 +10,14 @@ namespace game {
 
 PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture)
 	: GameObject(position, geom, shader, texture){
-	hp_ = 3;
+	hp_ = 50;
 	type_ = Player;
 	collision_ = true;
 	coinCount_ = 0;
 	boozeCount_ = 0;
 	chestCount_ = 0;
 	invicibiltyTimer_ = new Timer();
+	secondAttackCooldown_ = new Timer();
 	normTexture_ = texture;
 	maxspeed = 4; 
 }
@@ -58,6 +59,7 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 		case Enemy:
 		case Shark:
 		case EnemyShip:
+		case HarpoonShip:
 		case Bullet:
 			if (!isInvicible()) {
 				TakeDamage(1);
@@ -102,4 +104,13 @@ void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
 	}
 }
 
+bool PlayerGameObject::Shoot2() {
+	secondAttackCooldown_->Finished();
+	if (!secondAttackCooldown_->Running())
+	{
+		secondAttackCooldown_->Start(2.f);
+		return true;
+	}
+	return false;
+}
 } // namespace game

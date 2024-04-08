@@ -43,9 +43,11 @@ set(SRCS
     enemyShip.cpp
     text_game_object.cpp
     harpoonShip.cpp
+    explosion_particle_vertex_shader.glsl
     particle_vertex_shader.glsl
     text_fragment_shader.glsl
     particle_fragment_shader.glsl
+    explosion_particle_fragment_shader.glsl
     sprite_vertex_shader.glsl
     sprite_fragment_shader.glsl
 )

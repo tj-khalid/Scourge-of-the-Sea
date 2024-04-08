@@ -14,7 +14,7 @@ namespace game {
             Particles(void);
 
             // Create the geometry (called once)
-            void CreateGeometry(void);
+            void CreateGeometry(float);
 
             // Use the geometry
             void SetGeometry(GLuint shader_program);

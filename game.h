@@ -9,6 +9,19 @@
 #include "shader.h"
 #include "game_object.h"
 
+#include "sprite.h"
+#include "shader.h"
+#include "player_game_object.h"
+#include "enemy_game_object.h"
+#include "collectible_game_object.h"
+#include "bullet.h"
+#include "shark.h"
+#include "EnemyShip.h"
+#include "harpoonShip.h"
+#include "text_game_object.h"
+#include "particle_system.h"
+#include "particles.h"
+
 namespace game {
 
     // A class for holding the main game objects
@@ -41,11 +54,14 @@ namespace game {
             Geometry *sprite_;
 
             // Particle geometry
-            Geometry *particles_;
+            Particles* water_particles_;
+            Particles* explosion_particles_;
 
             // Shader for rendering sprites in the scene
             Shader sprite_shader_;
             Shader text_shader_;
+            Shader water_ripple_particle_shader_;
+            Shader explosion_particle_shader_;
 
             // Shader for rendering particles
             Shader particle_shader_;
@@ -56,9 +72,12 @@ namespace game {
 
             // List of game objects
             std::vector<GameObject*> game_objects_;
+            std::vector<ParticleSystem*> game_particles_;
 
             // Keep track of time
             double current_time_;
+
+            float camera_zoom;
 
             Timer* spawnCollectibleTimer_;
             Timer* spawnEnemyTimer_;
