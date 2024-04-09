@@ -39,6 +39,7 @@ namespace game {
 		GameObject::Update(delta_time);
 	}
 
+	//Sets the Target Of The AI 
 	void EnemyGameObject::chaseTarget(GameObject* target) {
 		state = Intercepting;
 		target_ = target;
@@ -48,6 +49,7 @@ namespace game {
 		t = 0;
 	}
 
+	//Checks Collisions
 	void EnemyGameObject::CollideWith(GameObject* obj) {
 		switch (obj->GetObjectType()){
 		case Player:
@@ -59,6 +61,7 @@ namespace game {
 		}
 	}
 
+	//Shoots a Cannon Ball
 	bool EnemyGameObject::Shoot() {
 		attackCooldown_->Finished();
 		if (!attackCooldown_->Running() && shooting_)

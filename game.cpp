@@ -66,6 +66,7 @@ void Game::Init(void)
     sprite_ = new Sprite();
     sprite_->CreateGeometry();
 
+    //Initalize Particle Systems
     cannon_particles_ = new Particles();
     cannon_particles_->CreateGeometry(0.35f, 6.f, .04f);
 
@@ -317,6 +318,7 @@ void Game::HandleControls(double delta_time)
             ps->GetDeathTimer()->Start(0.15f);
         }
     }
+    //Finds Mouse Posistion 
     if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
         if (player->Shoot2()){
 
@@ -426,6 +428,7 @@ void Game::Update(double delta_time){
                 }
             }
             
+            //Switch Case If The Player Collides With Different Game Objects
             if (i == 0) {
                 switch (other_game_object->GetObjectType())
                 {
@@ -484,6 +487,7 @@ void Game::Update(double delta_time){
             
     }
 
+    //Checks if the Particle System needs to be deleted
     for (int i = 0; i < game_particles_.size(); i++)
     {
         game_particles_[i]->Update(delta_time);
@@ -494,6 +498,7 @@ void Game::Update(double delta_time){
         }
     }
 
+    //Spawns Collectible by Random Numver Generator
     if (spawnCollectibleTimer_->Finished()){
         int random_angle = std::rand() % 360 + 1;
         int random_collectable = std::rand() % 3;
@@ -520,6 +525,7 @@ void Game::Update(double delta_time){
         spawnCollectibleTimer_->Start(3);
     }
 
+    //Spawns Random Enemy
     if (spawnEnemyTimer_->Finished()) {
         int random_angle = std::rand() % 360 + 1;
         int random_enemy = std::rand() % 3;

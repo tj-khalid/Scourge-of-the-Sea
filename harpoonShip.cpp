@@ -7,7 +7,7 @@
 namespace game {
 
 	/*
-		HarpoonShip inherits from GameObject
+		HarpoonShip inherits from EnemyGameObject
 	*/
 
 	HarpoonShip::HarpoonShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
@@ -28,6 +28,7 @@ namespace game {
 		float speed = 1.5f;
 		float pi_over_two = pi<float>() / 2.0f;
 
+		//Intercepting AI (If plyer is within a certain range fires a Harpoon)
 		switch (state) {
 		case Intercepting:
 			AddForce((targetDir_) * (float)delta_time);

@@ -26,6 +26,7 @@ namespace game {
 		GameObject::Update(delta_time);
 	}
 
+	//Checks Collisions With Game Objects
 	void CollectibleGameObject::CollideWith(GameObject* obj) {
 		switch (obj->GetObjectType()){
 			case Player:

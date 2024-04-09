@@ -17,6 +17,7 @@ namespace game {
 		if (deathTimer_->Finished()) { setToDestroy_ = true; }
 	}
 
+	//Cases For Collision Between Game Objects
 	void Bullet::CollideWith(GameObject* obj) {
 		switch (obj->GetObjectType())
 		{

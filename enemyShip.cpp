@@ -7,7 +7,7 @@
 namespace game {
 
 	/*
-		EnemyShip inherits from GameObject
+		EnemyShip inherits from EnemyGameObject
 	*/
 
 	EnemyShip::EnemyShip(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
@@ -26,12 +26,12 @@ namespace game {
 		t += delta_time;
 		float speed = 1.5f;
 		float pi_over_two = pi<float>() / 2.0f;
-		//std::cout << state << std::endl;
 
-		//cout << targetDir_.x << " " << targetDir_.y << endl;
+		//State Machine For Enemy Ship (Intercept AI)
 		switch (state) {
 		case Intercepting:
 			AddForce((targetDir_ + target_->GetBearing() * 4.f) * (float)delta_time);
+			//If To The Side Of THe Ship Shoot at it 
 			if (RayCollision(GetRight(), target_)) {
 				shooting_ = true;
 			}

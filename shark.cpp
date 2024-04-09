@@ -7,7 +7,7 @@
 namespace game {
 
 	/*
-		Shark inherits from GameObject
+		Shark inherits from EnemyGameObject
 	*/
 
 	Shark::Shark(const glm::vec3& position, Geometry* geom, Shader* shader, GLuint texture)
@@ -22,6 +22,7 @@ namespace game {
 		t += delta_time;
 		float speed = 1.5f;
 		float pi_over_two = glm::pi<float>() / 2.0f;
+		//State Machine, (Starts Patrolling, If IN Range Rams into the Player)
 		switch (state){
 			case Patrolling:
 				position_.x = glm::cos(t*speed) + patrollingPosition_.x;

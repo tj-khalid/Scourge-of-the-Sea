@@ -52,6 +52,7 @@ void PlayerGameObject::Update(double delta_time) {
 	GameObject::Update(delta_time);
 }
 
+//Checks Players Collisions With Other Game Objects
 void PlayerGameObject::CollideWith(GameObject* obj) {
 	switch (obj->GetObjectType()){
 		default:
@@ -80,11 +81,14 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 	}
 }
 
+//Adds to the Collectible Count Of THe Player
 void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
 	switch (collectible->getCollectType())
 	{
+	//Chest Increases Score By 4
 	case CollectibleGameObject::Chest:
 		coinCount_ += 4;
+	//Coin Increases Score by 1
 	case CollectibleGameObject::Coin:
 		coinCount_++;
 		for each (GameObject* child in children){
@@ -94,6 +98,7 @@ void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
 			}
 		}
 		break;
+	//If You Get 5 Barrels Of Booze you get invincible for a few seconds
 	case CollectibleGameObject::Booze:
 		boozeCount_++;
 		break;
@@ -104,6 +109,7 @@ void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
 	}
 }
 
+//Shoots Harpoon
 bool PlayerGameObject::Shoot2() {
 	secondAttackCooldown_->Finished();
 	if (!secondAttackCooldown_->Running())
