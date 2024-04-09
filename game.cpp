@@ -66,11 +66,11 @@ void Game::Init(void)
     sprite_ = new Sprite();
     sprite_->CreateGeometry();
 
-    water_particles_ = new Particles();
-    water_particles_->CreateGeometry(0.43f);
+    cannon_particles_ = new Particles();
+    cannon_particles_->CreateGeometry(0.35f, 6.f, .04f);
 
     explosion_particles_ = new Particles();
-    explosion_particles_->CreateGeometry(3.1415f);
+    explosion_particles_->CreateGeometry(3.1415f, 5.f, .06f);
 
     spawnCollectibleTimer_ = new Timer();
     spawnEnemyTimer_ = new Timer();
@@ -79,7 +79,7 @@ void Game::Init(void)
     // Initialize sprite shader
     sprite_shader_.Init((resources_directory_g+std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g+std::string("/sprite_fragment_shader.glsl")).c_str());
     text_shader_.Init((resources_directory_g + std::string("/sprite_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/text_fragment_shader.glsl")).c_str());
-    water_ripple_particle_shader_.Init((resources_directory_g + std::string("/particle_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/particle_fragment_shader.glsl")).c_str());
+    cannon_flare_particle_shader_.Init((resources_directory_g + std::string("/particle_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/particle_fragment_shader.glsl")).c_str());
     explosion_particle_shader_.Init((resources_directory_g + std::string("/explosion_particle_vertex_shader.glsl")).c_str(), (resources_directory_g + std::string("/explosion_particle_fragment_shader.glsl")).c_str());;
 
     // Initialize time
@@ -120,9 +120,6 @@ void Game::Setup(void)
     PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
     player->SetInvincibleTex(tex_[9]);
 
-
-
-
     // Set up text quad
     TextGameObject* text = new TextGameObject(glm::vec3(-3.5f, 4.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
     text->SetScaleX(4.5);
@@ -139,7 +136,7 @@ void Game::Setup(void)
     // Setup other objects
 
 
-   Shark* SharkTest =  (Shark*)SpawnObject(GameObject::Shark, glm::vec3(4.0f, -4.5f, 0.0f), tex_[12], 1.f/2.f);
+   //EnemyShip* SharkTest =  (EnemyShip*)SpawnObject(GameObject::EnemyShip, glm::vec3(0.5f, -0.5f, 0.0f), tex_[12], 1.f/2.f);
 
     spawnCollectibleTimer_->Start(3);
     spawnEnemyTimer_->Start(5);
@@ -304,6 +301,20 @@ void Game::HandleControls(double delta_time)
             GameObject* bulletLeft = SpawnObject(GameObject::Bullet, player->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
             bulletLeft->SetRotation(player->GetAngle() + glm::pi<float>() / 2);
 
+
+            ParticleSystem* ps = new ParticleSystem(vec3(-.15f, player->GetScaleX() / 4, 0.f), cannon_particles_, &cannon_flare_particle_shader_, tex_[4], player);
+            game_particles_.push_back(ps);
+
+            ps->SetScale(.2f);
+            ps->SetRotation(pi<float>());
+            ps->GetDeathTimer()->Start(0.15f);
+
+            ps = new ParticleSystem(vec3(-.15f, -player->GetScaleX() / 4, 0.f), cannon_particles_, &cannon_flare_particle_shader_, tex_[4], player);
+            game_particles_.push_back(ps);
+
+            ps->SetScale(.2f);
+            ps->SetRotation(0);
+            ps->GetDeathTimer()->Start(0.15f);
         }
     }
     if (glfwGetMouseButton(window_, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
@@ -375,14 +386,15 @@ void Game::Update(double delta_time){
                 game_objects_.erase(game_objects_.begin() + i);
                 SpawnObject(GameObject::Other, curPos, tex_[7], 1 / 1.f, i);
 
-                ParticleSystem* ps = new ParticleSystem(vec3(0.f), explosion_particles_, &explosion_particle_shader_, tex_[4], player);
+                ParticleSystem* ps = new ParticleSystem(vec3(0.f), explosion_particles_, &explosion_particle_shader_, tex_[4], game_objects_[i]);
                 game_particles_.push_back(ps);
                 float pi_over_two = pi<float>() / 2.0f;
 
                 game_particles_.back()->SetRotation(pi_over_two);
                 game_particles_.back()->SetScale(.15f);
                 ps->SetRotation(pi<float>() * 3 / 2);
-                ps->GetDeathTimer()->Start(3.f);
+                ps->GetDeathTimer()->Start(0.7f);
+
                 game_objects_[i]->GetDeathTimer()->Start(5);
                 break;
             }
@@ -441,6 +453,21 @@ void Game::Update(double delta_time){
                             bulletRight->SetRotation(enemy->GetAngle() - glm::pi<float>() / 2);
                             GameObject* bulletLeft = SpawnObject(GameObject::Bullet, enemy->GetPosition(), tex_[11], .27f, game_objects_.size() - 1);
                             bulletLeft->SetRotation(enemy->GetAngle() + glm::pi<float>() / 2);
+
+                            ParticleSystem* ps = new ParticleSystem(vec3(-.15f, enemy->GetScaleX() / 4, 0.f), cannon_particles_, &cannon_flare_particle_shader_, tex_[4], enemy);
+                            game_particles_.push_back(ps);
+
+                            ps->SetScale(.2f);
+                            ps->SetRotation(pi<float>());
+                            ps->GetDeathTimer()->Start(0.15f);
+
+                            ps = new ParticleSystem(vec3(-.15f, -enemy->GetScaleX() / 4, 0.f), cannon_particles_, &cannon_flare_particle_shader_, tex_[4], enemy);
+                            game_particles_.push_back(ps);
+
+                            ps->SetScale(.2f);
+                            ps->SetRotation(0);
+                            ps->GetDeathTimer()->Start(0.15f);
+
                             break;
                         }
                     }

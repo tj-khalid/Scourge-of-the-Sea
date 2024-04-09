@@ -8,7 +8,7 @@ namespace game {
 
 ParticleSystem::ParticleSystem(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture, GameObject *parent)
 	: GameObject(position, geom, shader, texture){
-
+    current_time_ = NULL;
     //parent->addChild(this);
     parent_ = parent;
 }
@@ -22,6 +22,10 @@ void ParticleSystem::Update(double delta_time) {
 
 
 void ParticleSystem::Render(glm::mat4 view_matrix, double current_time){
+
+    if (current_time_ == NULL){
+        current_time_ = current_time;
+    }
 
     // Set up the shader
     shader_->Enable();
@@ -51,6 +55,9 @@ void ParticleSystem::Render(glm::mat4 view_matrix, double current_time){
 
     // Set the time in the shader
     shader_->SetUniform1f("time", current_time);
+
+    // Set the time in the shader
+    shader_->SetUniform1f("start_time", current_time_);
 
     // Set up the geometry
     geometry_->SetGeometry(shader_->GetShaderProgram());

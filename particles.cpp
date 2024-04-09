@@ -15,7 +15,7 @@ Particles::Particles(void) : Geometry()
 }
 
 
-void Particles::CreateGeometry(float angle)
+void Particles::CreateGeometry(float angle, float speed, float phase_time)
 {
 
     // Each particle is a square with four vertices and two triangles
@@ -55,8 +55,8 @@ void Particles::CreateGeometry(float angle)
             // Get three random values
             //theta = (two_pi*(rand() % 1000) / 1000.0f);
             theta = (2.0*(rand() % 10000) / 10000.0f -1.0f)* angle + pi;
-            r = (0.0f + 0.8 * (rand() % 10000) / 10000.0f)*5.f;
-            tmod = ((rand() % 10000) / 10000.0f)*0.10f;
+            r = (0.0f + 0.8 * (rand() % 10000) / 10000.0f)* speed;
+            tmod = ((rand() % 10000) / 10000.0f)* phase_time;
         }
 
         // Copy position from standard sprite

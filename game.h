@@ -54,13 +54,13 @@ namespace game {
             Geometry *sprite_;
 
             // Particle geometry
-            Particles* water_particles_;
+            Particles* cannon_particles_;
             Particles* explosion_particles_;
 
             // Shader for rendering sprites in the scene
             Shader sprite_shader_;
             Shader text_shader_;
-            Shader water_ripple_particle_shader_;
+            Shader cannon_flare_particle_shader_;
             Shader explosion_particle_shader_;
 
             // Shader for rendering particles

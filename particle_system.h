@@ -16,7 +16,7 @@ namespace game {
             void Render(glm::mat4 view_matrix, double current_time);
 
         private:
-
+            float current_time_;
     }; // class ParticleSystem
 
 } // namespace game
