@@ -1,50 +1,76 @@
 Tamjeed Zunayed, 101269330
-Assignment 3
+Elijah Molina, 101272342
+Final Project
 
 OS: Windows
 	
-Changes:
+Instructions:
 
-- Game::Render() changes:
-  - Added continuous scrolling of the game, by adding a playerTransformation to the view_matrix
+The goal of the game is collect 100 coins to become the King Of The Pirates
 
-- GameObject Class changes:
-  - Created ghost_mode, tiling_ and isOrbiting bools
-  - Created getter and setters
-  - GameObject::Render() changes:
-    - created orbit matrix
-    - changed transformation matrix based on its orbiting state
-    - created uniforms in the shader based on tiling_ and ghost_mode
-    - implemented grayscale and tiling rendering in the fragment shader
-  - GameObject::Update() changes:
-    - implemented orbiting function by top left of image (rough but it works)
-  - Updated Constructor
-  - Scaling automaically finds textures dimensions and applies accordingly
+Controls:
 
-- PlayerGameObject class Changes:
-  - created velocity_ vector
-  - created addForce() method, with maximum velocity of 2
-  - PlayerGameObject::Update() now uses physics based motion
-  - Game::HandleControls() now uses AddForce method of the player
+[w] - Move Forward
+[A] - Move Left
+[S] - Move Right
+[D] - Move Backwards
+[Left Click] - Shoot Harpoon At Mouse's Location
+[Space Bar] - Shoot Cannons on the Sides of the Boat
 
-- Game::Setup() changes:
-  - scaled background up by a factor of 3
-  - set its tiling to true
-  - added swinging axe at cords(2.0, -2.0)
-  - set its orbiting to true
+Requirements:
 
-- Game::Update() changes:
-  - collectibles now turn to grayscale when collided with the player
+Game Mechanics:
+
+- Different Weapons To Help Destory Other Ships (Cannons & Harpoons)
+- Gather Coins From The Ground And Destroying Other Ships
+- Gather Powers Ups (Invincibilty)
+- Gather 100 Coins In Order To Win
+
+
+Enemies:
+- Shark AI
+	- Chase AI 
+	- Rams Into The Player
+- Cannon Ship
+	- Intercept AI
+	- Goes To The Side Of The Ship to Shoot It's Cannons 
+- Harpoon Ship
+	- Chase AI
+	- Once Close Enough To Ship Shoot Harpoon
+
+Weapons:
+- Cannon
+	- Comes From The Sides of the Ship Press [SPACE] to fire.
+- Harpoon
+	- Comes From The Centre of The Ship and Goes In The Direction of the Mouse Cursor Press [LMB]
+
+Collcetible Items:
+- Chest -> Gives 5 Coins
+- Coin -> Gives 1 Coin
+- Barrel -> Collect 5 And Become Invincible For 10 Seconds
+
+Movement And Transformation:
+- Player/Enemy Ships -> Physics Based
+- Cannon/Harpoon/Shark -> Parametric Based
+
+Collision Detection:
+- Performs Circle to Circle Collision when 2 ships are close
+- Performs Ray Collision When There is a Bullet or Harpoon hitting the ship
+
+Game World
+- Map is 21x21 Tiles created using texture tiling 
+
+Particle System
+- Cannon Fire -> caused when you Press [SPACE] and fire a Cannon 
+- Explosion -> Caused when you hit a enemy ship
+
+UI
+- Displays Score and HP
+
+Advanced Method
+- Intercept AI that goes to a position to the side of the Player and fires a Cannon once close enough
+     	
+
 
 Citations:
-A1:
-player's sprite taken from Website "https://millionthvector.blogspot.com/2013/07/more-free-top-down-spaceship-sprites.html"
-enemy's sprite taken from Website "https://millionthvector.blogspot.com/2013/07/more-free-top-down-spaceship-sprites.html"
-Explosion sprite taken from Website "https://www.cleanpng.com/png-pixel-art-nyan-cat-4515197/download-png.html"
-
-A2:
-collectible sprite taken from Website "https://iconduck.com/icons/313561/gold-coin"
-Invincible Player sprite edited from player sprite
-
-A3:
-Swinging axe from: https://www.vecteezy.com/vector-art/24212725-pixel-art-axe-strong-lumberjack-axe-pixelated-design-for-logo-web-mobile-app-badges-and-patches-video-game-sprite-8-bit-isolated-vector-illustration
+All Sprites Taken From opengameart.org under CC License

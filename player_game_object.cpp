@@ -10,7 +10,7 @@ namespace game {
 
 PlayerGameObject::PlayerGameObject(const glm::vec3 &position, Geometry *geom, Shader *shader, GLuint texture)
 	: GameObject(position, geom, shader, texture){
-	hp_ = 50;
+	hp_ = 5;
 	type_ = Player;
 	collision_ = true;
 	coinCount_ = 0;
@@ -34,8 +34,9 @@ void PlayerGameObject::Update(double delta_time) {
 	if (boozeCount_ == 5) {
 		invicibiltyTimer_->Start(10);
 		boozeCount_ = 0;
-		if (hp_ < 3) {
-			hp_++;
+		if (hp_ < 5) {
+			hp_ += 2;
+			HP_UI->SetText("HP: " + to_string(hp_));
 		}
 	}
 	invicibiltyTimer_->Finished();
@@ -85,18 +86,14 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 void PlayerGameObject::AddCollectible(CollectibleGameObject* collectible) {
 	switch (collectible->getCollectType())
 	{
-	//Chest Increases Score By 4
+	//Chest Increases Score By 5 total
 	case CollectibleGameObject::Chest:
 		coinCount_ += 4;
 	//Coin Increases Score by 1
 	case CollectibleGameObject::Coin:
 		coinCount_++;
-		for each (GameObject* child in children){
-			if (child->GetObjectType() == CoinsText) {
-				TextGameObject* coinText = (TextGameObject*) child;
-				coinText->SetText("Coins: " + to_string(coinCount_));
-			}
-		}
+		//update the HUD
+		Coin_HUD->SetText("Coins: " + to_string(coinCount_));
 		break;
 	//If You Get 5 Barrels Of Booze you get invincible for a few seconds
 	case CollectibleGameObject::Booze:

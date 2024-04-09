@@ -5,6 +5,7 @@
 
 #include "game_object.h"
 
+
 namespace game {
 
     // Inherits from GameObject
@@ -17,12 +18,13 @@ namespace game {
             std::string GetText(void) const;
             void SetText(std::string text);
             void SetObjectType(ObjectType t) { type_ = t; }
-
+            void SetPlayerReference(GameObject* player) { player_ = player; }
             // Render function for the text
             void Render(glm::mat4 view_matrix, double current_time) override;
 
         private:
             std::string text_;
+            GameObject* player_;
 
     }; // class TextGameObject
 

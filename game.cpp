@@ -121,19 +121,23 @@ void Game::Setup(void)
     PlayerGameObject* player = (PlayerGameObject*)game_objects_[0];
     player->SetInvincibleTex(tex_[9]);
 
-    // Set up text quad
+    // Set up HUD
     TextGameObject* text = new TextGameObject(glm::vec3(-3.5f, 4.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
     text->SetScaleX(4.5);
     text->SetScaleY(.75);
     text->SetText("Coins: 0");
     text->SetObjectType(GameObject::CoinsText);
-    player->addChild(text);
+    text->SetPlayerReference(player);
     TextGameObject* Hptext = new TextGameObject(glm::vec3(-4.f, 3.0f, 0.0f), sprite_, &text_shader_, tex_[14]);
     Hptext->SetScaleX(3);
     Hptext->SetScaleY(.75);
     Hptext->SetText("HP: "+ to_string(player->GetHP()));
     Hptext->SetObjectType(GameObject::HpText);
-    player->addChild(Hptext);
+    Hptext->SetPlayerReference(player);
+    game_objects_.push_back(Hptext);
+    game_objects_.push_back(text);
+    player->setCoin_HUD(text);
+    player->setHP_UI(Hptext);
     // Setup other objects
 
 
@@ -428,7 +432,7 @@ void Game::Update(double delta_time){
                 }
             }
             
-            //Switch Case If The Player Collides With Different Game Objects
+            //Switch Case For Certain Updates of the enemies
             if (i == 0) {
                 switch (other_game_object->GetObjectType())
                 {
@@ -498,7 +502,7 @@ void Game::Update(double delta_time){
         }
     }
 
-    //Spawns Collectible by Random Numver Generator
+    //Spawns Collectible by Random Number Generator
     if (spawnCollectibleTimer_->Finished()){
         int random_angle = std::rand() % 360 + 1;
         int random_collectable = std::rand() % 3;
@@ -533,10 +537,9 @@ void Game::Update(double delta_time){
         switch (random_enemy)
         {
             EnemyGameObject* enemy;
-        
+        case 0:
             SpawnObject(GameObject::Shark, randomEnemySpawn, tex_[12], 1.f / 2.f, game_objects_.size() - 1);
             break;
-        case 0:
         case 1:
             enemy = (EnemyGameObject*) SpawnObject(GameObject::EnemyShip, randomEnemySpawn, tex_[16], 1.f / 2.f, game_objects_.size() - 1);
             enemy->chaseTarget(game_objects_[0]);
@@ -546,7 +549,7 @@ void Game::Update(double delta_time){
             enemy->chaseTarget(game_objects_[0]);
             break;
     }
-        spawnEnemyTimer_->Start(1);
+        spawnEnemyTimer_->Start(5);
     }  
 
     //Win Condition

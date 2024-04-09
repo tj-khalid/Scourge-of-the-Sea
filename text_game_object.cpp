@@ -28,15 +28,9 @@ void TextGameObject::Render(glm::mat4 view_matrix, double current_time) {
     glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0f), position_);
 
     glm::mat4 parent_transformation_matrix;
-    if (parent_ != nullptr)
-    {
-        //glm::mat4 parent_rotation_matrix = glm::rotate(glm::mat4(1.0f), parent_->GetRotation(), glm::vec3(0.0, 0.0, 1.0));
-        glm::mat4 parent_translation_matrix = glm::translate(glm::mat4(1.0f), parent_->GetPosition());
-        parent_transformation_matrix = parent_translation_matrix;
-    }
-    else {
-        parent_transformation_matrix = glm::mat4(1.0f);
-    }
+    //glm::mat4 parent_rotation_matrix = glm::rotate(glm::mat4(1.0f), parent_->GetRotation(), glm::vec3(0.0, 0.0, 1.0));
+    glm::mat4 parent_translation_matrix = glm::translate(glm::mat4(1.0f), player_->GetPosition());
+    parent_transformation_matrix = parent_translation_matrix;
 
     // Setup the transformation matrix for the shader
     glm::mat4 transformation_matrix = parent_transformation_matrix * translation_matrix * rotation_matrix * scaling_matrix;
