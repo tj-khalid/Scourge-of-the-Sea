@@ -70,7 +70,8 @@ UI
 Advanced Method
 - Intercept AI that goes to a position to the side of the Player and fires a Cannon once close enough
      	
-
+Gameplay Notes
+- Harpoon does not work as expected while in Fullscreen!
 
 Citations:
 All Sprites Taken From opengameart.org under CC License

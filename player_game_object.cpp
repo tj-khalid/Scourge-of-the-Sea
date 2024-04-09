@@ -64,14 +64,8 @@ void PlayerGameObject::CollideWith(GameObject* obj) {
 		case HarpoonShip:
 		case Bullet:
 			if (!isInvicible()) {
-				TakeDamage(1);
-				for each (GameObject* chils in children)
-				{
-					if (chils->GetObjectType() == HpText) {
-						TextGameObject* hptext = (TextGameObject*)chils;
-						hptext->SetText("HP: " + to_string(hp_));
-					}
-				}
+				TakeDamage(1); 
+				HP_UI->SetText("HP: " + to_string(hp_)); 
 			}
 			break;
 		case Collectible:
